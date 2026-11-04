@@ -1,0 +1,29 @@
+# Veille technologique
+
+Site vitrine (`index.html`) mis à jour chaque jour par la tâche planifiée **veille**
+(GitHub Actions, `.github/workflows/veille.yml`).
+
+## Fonctionnement
+
+1. Chaque jour à 05:00 UTC, le workflow lit `technologies.csv`.
+2. Pour chaque technologie, `scripts/veille.py` collecte :
+   - la dernière version publiée (GitHub Releases ; kernel.org pour le noyau) ;
+   - les billets récents des flux officiels (RSS/Atom) ;
+   - les actualités des 30 derniers jours (Google News, FR + EN).
+3. Il génère `index.html` et `data/veille.json` (instantané + historique pour repérer les nouveautés),
+   puis les pousse sur `main`.
+
+Lancement manuel : onglet **Actions** → **veille** → **Run workflow**.
+Modifier `technologies.csv` sur `main` relance aussi la génération.
+
+## Ajouter une technologie
+
+Ajoutez une ligne `Nom;Infos` dans `technologies.csv`. Si la colonne « Informations complémentaires »
+contient une URL GitHub, ses releases sont suivies automatiquement. Pour affiner (catégorie, dépôt,
+flux officiels, requête de recherche, lien officiel), ajoutez une entrée dans `scripts/sources.json`.
+
+## En local
+
+```bash
+python3 scripts/veille.py   # Python 3.10+, aucune dépendance
+```
