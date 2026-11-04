@@ -27,7 +27,7 @@ concurrency:
 jobs:
   veille:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
 
@@ -38,6 +38,7 @@ jobs:
       - name: Collecter la veille et générer index.html
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}   # facultatif
         run: python scripts/veille.py
 
       - name: Aperçu (PR uniquement)

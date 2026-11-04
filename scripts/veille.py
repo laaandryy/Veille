@@ -18,6 +18,8 @@ import json
 import os
 import re
 import sys
+import unicodedata
+import time
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -38,6 +40,8 @@ NEWS_WINDOW_DAYS = 30      # actualités plus anciennes ignorées
 MAX_NEWS = 6               # actualités affichées par technologie
 MAX_RELEASES = 3
 HISTORY_DAYS = 120         # durée de conservation des liens « déjà vus »
+CVE_WINDOW_DAYS = 30       # CVE publiées sur les 30 derniers jours
+MAX_CVES = 5               # CVE affichées par technologie
 UA = "veille-bot/1.0 (+https://github.com/laaandryy/Veille)"
 TIMEOUT = 20
 
@@ -97,9 +101,46 @@ def read_technologies() -> list[dict]:
     return techs
 
 
-def load_sources() -> dict:
+def load_sources() -> tuple[dict, dict]:
     data = json.loads(SOURCES_PATH.read_text(encoding="utf-8"))
-    return {k.strip().lower(): v for k, v in data.items() if not k.startswith("_")}
+    sources = {k.strip().lower(): v for k, v in data.items() if not k.startswith("_")}
+    return sources, data.get("_filtres", {})
+
+
+# --------------------------------------------------------------------------- filtres
+def norm(s: str) -> str:
+    """Minuscules, sans accents ni ponctuation, pour comparer des titres."""
+    s = unicodedata.normalize("NFKD", s or "").encode("ascii", "ignore").decode().lower()
+    return " " + re.sub(r"[^a-z0-9.+]+", " ", s).strip() + " "
+
+
+class NewsFilter:
+    """Écarte les articles hors sujet ou commerciaux (pubs, promos, comparatifs…)."""
+
+    def __init__(self, cfg: dict):
+        self.title_re = re.compile("|".join(cfg.get("titres_exclus", [])) or r"(?!x)x", re.I)
+        self.sources = [norm(x) for x in cfg.get("sources_exclues", [])]
+        self.dropped = 0
+
+    def ok(self, item: dict, terms: list[str]) -> bool:
+        title = item["title"]
+        if self.title_re.search(title):
+            return self._drop()
+        src = norm(item.get("source") or "") + norm(urllib.parse.urlparse(item["url"]).netloc)
+        if any(b in src for b in self.sources):
+            return self._drop()
+        # Hors flux officiels : la technologie doit être nommée dans le titre.
+        if not item.get("official") and terms and not any(t in norm(title) for t in terms):
+            return self._drop()
+        return True
+
+    def _drop(self) -> bool:
+        self.dropped += 1
+        return False
+
+
+NEWS_FILTER: NewsFilter | None = None
+NEWS_FILTER_CFG: dict = {}
 
 
 def github_repo_from(url: str) -> str | None:
@@ -219,14 +260,93 @@ def official_feed(url: str) -> list[dict]:
         return []
 
 
-def google_news(query: str, lang: str) -> list[dict]:
+def google_news(query: str, lang: str, negative: str = "") -> list[dict]:
     params = {"fr": "hl=fr&gl=FR&ceid=FR:fr", "en": "hl=en-US&gl=US&ceid=US:en"}[lang]
-    url = f"https://news.google.com/rss/search?q={urllib.parse.quote(query + ' when:30d')}&{params}"
+    q = " ".join(x for x in (query, negative, "when:30d") if x)
+    url = f"https://news.google.com/rss/search?q={urllib.parse.quote(q)}&{params}"
     try:
         return [dict(i, lang=lang) for i in parse_feed(fetch(url))]
     except Exception as e:  # noqa: BLE001
         log(f"  ! news {lang} '{query}': {e}")
         return []
+
+
+def nvd_cves(keyword: str) -> list[dict] | None:
+    """CVE récentes de la base NVD (NIST) dont la description contient `keyword`.
+
+    Renvoie None en cas d'échec (pour conserver les données de la veille précédente).
+    Sans clé API, la NVD autorise 5 requêtes / 30 s : l'appelant espace les appels.
+    """
+    start = (NOW - timedelta(days=CVE_WINDOW_DAYS)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    end = NOW.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    params = urllib.parse.urlencode({
+        "keywordSearch": keyword, "keywordExactMatch": "",
+        "pubStartDate": start, "pubEndDate": end, "resultsPerPage": 2000,
+        "noRejected": "",
+    }).replace("keywordExactMatch=&", "keywordExactMatch&").replace("&noRejected=", "&noRejected")
+    url = f"https://services.nvd.nist.gov/rest/json/cves/2.0?{params}"
+    headers = {"apiKey": os.environ["NVD_API_KEY"]} if os.environ.get("NVD_API_KEY") else {}
+    data = None
+    for attempt in range(3):
+        try:
+            data = json.loads(fetch(url, headers))
+            break
+        except Exception as e:  # noqa: BLE001
+            log(f"  ! nvd '{keyword}' (essai {attempt + 1}): {e}")
+            time.sleep(12 * (attempt + 1))
+    if data is None:
+        return None
+    out = []
+    for v in data.get("vulnerabilities", []):
+        c = v.get("cve", {})
+        if c.get("vulnStatus") == "Rejected":
+            continue
+        desc = next((d["value"] for d in c.get("descriptions", []) if d.get("lang") == "en"), "")
+        sev, score = None, None
+        metrics = c.get("metrics", {})
+        for k in ("cvssMetricV40", "cvssMetricV31", "cvssMetricV30", "cvssMetricV2"):
+            if metrics.get(k):
+                m = metrics[k][0]
+                cd = m.get("cvssData", {})
+                score = cd.get("baseScore")
+                sev = cd.get("baseSeverity") or m.get("baseSeverity")
+                break
+        out.append({
+            "id": c.get("id"),
+            "url": f"https://nvd.nist.gov/vuln/detail/{c.get('id')}",
+            "date": iso(parse_date(c.get("published"))),
+            "severity": (sev or "").upper() or None,
+            "score": score,
+            "exploited": bool(c.get("cisaExploitAdd")),
+            "summary": clean_text(desc, 260),
+        })
+    out.sort(key=lambda x: x["date"] or "", reverse=True)
+    for c in out:
+        d = parse_date(c["date"])
+        c["new"] = bool(d and NOW - d < timedelta(hours=48))
+    return out
+
+
+def collect_cves(results: list[dict], sources: dict, previous: dict) -> None:
+    """Interroge la NVD séquentiellement (limite de débit) et remplit r['cves']."""
+    prev = {r["name"]: r.get("cves", []) for r in previous.get("results", [])}
+    pause = 0.8 if os.environ.get("NVD_API_KEY") else 6.5
+    for i, r in enumerate(results):
+        cfg = sources.get(r["name"].lower(), {})
+        keyword = cfg.get("cve", r["name"])
+        if not keyword:  # "cve": "" dans sources.json pour désactiver
+            r["cves"], r["cve_total"] = [], 0
+            continue
+        if i:
+            time.sleep(pause)
+        found = nvd_cves(keyword)
+        if found is None:
+            r["cves"] = prev.get(r["name"], [])
+            r["cve_total"] = len(r["cves"])
+            r["cve_stale"] = True
+        else:
+            r["cves"], r["cve_total"] = found[:MAX_CVES], len(found)
+        log(f"- CVE {r['name']} ({keyword}) : {r['cve_total']}")
 
 
 # --------------------------------------------------------------------------- pipeline
@@ -245,8 +365,13 @@ def collect(tech: dict, cfg: dict) -> dict:
     news: list[dict] = []
     for f in cfg.get("feeds", []):
         news += official_feed(f)
-    news += google_news(query, "fr")
-    news += google_news(query, "en")
+    negative = " ".join(f"-{w}" for w in NEWS_FILTER_CFG.get("mots_exclus_recherche", []))
+    news += google_news(query, "fr", negative)
+    news += google_news(query, "en", negative)
+    # Termes devant figurer dans le titre : "match" de sources.json, sinon le nom.
+    terms = [" " + norm(t).strip() for t in cfg.get("match", [name])]
+    extra = re.compile("|".join(cfg["exclure"]), re.I) if cfg.get("exclure") else None
+    news = [n for n in news if NEWS_FILTER.ok(n, terms) and not (extra and extra.search(n["title"]))]
 
     cutoff = NOW - timedelta(days=NEWS_WINDOW_DAYS)
     seen_urls, seen_titles, kept = set(), set(), []
@@ -311,8 +436,10 @@ def render(payload: dict) -> str:
 
 
 def main() -> int:
+    global NEWS_FILTER, NEWS_FILTER_CFG
     techs = read_technologies()
-    sources = load_sources()
+    sources, NEWS_FILTER_CFG = load_sources()
+    NEWS_FILTER = NewsFilter(NEWS_FILTER_CFG)
     log(f"{len(techs)} technologies à suivre")
     with ThreadPoolExecutor(max_workers=6) as pool:
         results = list(pool.map(lambda t: collect(t, sources.get(t["name"].lower(), {})), techs))
@@ -323,7 +450,9 @@ def main() -> int:
             previous = json.loads(DATA_PATH.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             previous = {}
+    log(f"Filtre actualités : {NEWS_FILTER.dropped} articles écartés")
     history = mark_new(results, previous.get("history", {}))
+    collect_cves(results, sources, previous)
 
     total_items = sum(len(r["news"]) + len(r["releases"]) for r in results)
     if total_items == 0 and previous.get("results"):
@@ -335,6 +464,8 @@ def main() -> int:
         "results": results,
         "stats": {
             "technologies": len(results),
+            "cves": sum(len(r["cves"]) for r in results),
+            "cves_critical": sum(1 for r in results for c in r["cves"] if c["severity"] in ("CRITICAL", "HIGH")),
             "news": sum(len(r["news"]) for r in results),
             "new": sum(r["new_count"] for r in results),
             "releases_week": sum(

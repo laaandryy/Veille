@@ -1,29 +1,353 @@
 {
-  "_doc": "Sources par technologie. Clé = nom exact (insensible à la casse) de technologies.csv. Champs : category, github (owner/repo, releases), feeds (RSS/Atom officiels), query (recherche actualités), site (lien officiel). Toute techno absente ici est suivie via la recherche d'actualités sur son nom.",
-  "Discord": {"category": "Communication", "query": "Discord mise à jour OR nouveauté OR update", "site": "https://discord.com/blog"},
-  "Obsidian": {"category": "Productivité", "github": "obsidianmd/obsidian-releases", "query": "Obsidian notes app", "site": "https://obsidian.md/changelog/"},
-  "Pulse Diagnostics": {"category": "Outils", "query": "\"Pulse Diagnostics\""},
-  "LM Studio": {"category": "IA locale", "github": "lmstudio-ai/lms", "query": "\"LM Studio\" LLM", "site": "https://lmstudio.ai/blog"},
-  "Ollama": {"category": "IA locale", "github": "ollama/ollama", "query": "Ollama LLM", "site": "https://ollama.com/blog"},
-  "Langflow": {"category": "IA locale", "github": "langflow-ai/langflow", "query": "Langflow", "site": "https://www.langflow.org"},
-  "Docker": {"category": "Conteneurs", "github": "moby/moby", "feeds": ["https://www.docker.com/feed/"], "query": "Docker conteneurs", "site": "https://docs.docker.com/engine/release-notes/"},
-  "Kernel Linux": {"category": "Systèmes", "kernel": true, "query": "\"noyau Linux\" OR \"Linux kernel\"", "site": "https://www.kernel.org"},
-  "Debian": {"category": "Systèmes", "feeds": ["https://www.debian.org/News/news"], "query": "Debian Linux", "site": "https://www.debian.org/News/"},
-  "Ubuntu": {"category": "Systèmes", "feeds": ["https://ubuntu.com/blog/feed"], "query": "Ubuntu Linux", "site": "https://ubuntu.com/blog"},
-  "Alpine Linux": {"category": "Systèmes", "feeds": ["https://alpinelinux.org/atom.xml"], "query": "\"Alpine Linux\"", "site": "https://alpinelinux.org/posts/"},
-  "Arch Linux": {"category": "Systèmes", "feeds": ["https://archlinux.org/feeds/news/"], "query": "\"Arch Linux\"", "site": "https://archlinux.org/news/"},
-  "Kali Linux": {"category": "Systèmes", "feeds": ["https://www.kali.org/rss.xml"], "query": "\"Kali Linux\"", "site": "https://www.kali.org/blog/"},
-  "MobaXterm": {"category": "Outils", "query": "MobaXterm", "site": "https://mobaxterm.mobatek.net/download-home-edition.html"},
-  "Git for windows": {"category": "Outils", "github": "git-for-windows/git", "query": "\"Git for Windows\"", "site": "https://gitforwindows.org"},
-  "Proxmox": {"category": "Virtualisation", "query": "Proxmox VE", "site": "https://www.proxmox.com/en/about/company-details/press-releases"},
-  "HyperV": {"category": "Virtualisation", "query": "Hyper-V Microsoft", "site": "https://learn.microsoft.com/virtualization/"},
-  "Pfsens": {"category": "Réseau & sécurité", "query": "pfSense", "site": "https://docs.netgate.com/pfsense/en/latest/releases/"},
-  "Wireguard": {"category": "Réseau & sécurité", "query": "WireGuard VPN", "site": "https://www.wireguard.com"},
-  "Wg-Easy": {"category": "Réseau & sécurité", "github": "wg-easy/wg-easy", "query": "wg-easy WireGuard"},
-  "Pi Hole": {"category": "Réseau & sécurité", "github": "pi-hole/pi-hole", "query": "Pi-hole", "site": "https://pi-hole.net/blog/"},
-  "Headscale": {"category": "Réseau & sécurité", "github": "juanfont/headscale", "query": "Headscale Tailscale"},
-  "TailScale": {"category": "Réseau & sécurité", "github": "tailscale/tailscale", "feeds": ["https://tailscale.com/blog/index.xml"], "query": "Tailscale", "site": "https://tailscale.com/changelog"},
-  "Virtualbox": {"category": "Virtualisation", "query": "VirtualBox Oracle", "site": "https://www.virtualbox.org/wiki/Changelog"},
-  "Brave": {"category": "Navigateurs & vie privée", "github": "brave/brave-browser", "query": "\"Brave browser\" OR \"navigateur Brave\"", "site": "https://brave.com/latest/"},
-  "Mullvad": {"category": "Navigateurs & vie privée", "github": "mullvad/mullvadvpn-app", "feeds": ["https://mullvad.net/en/blog/feed/atom"], "query": "Mullvad VPN", "site": "https://mullvad.net/en/blog"}
+ "_doc": "Sources par technologie. Clé = nom exact (insensible à la casse) de technologies.csv. Champs : category, github (owner/repo, releases), feeds (RSS/Atom officiels), query (recherche actualités), site (lien officiel). Toute techno absente ici est suivie via la recherche d'actualités sur son nom. cve : mot-clé (expression exacte) cherché dans les CVE de la NVD ; chaîne vide pour désactiver. match : termes dont au moins un doit figurer dans le titre d'un article (défaut : le nom). exclure : expressions régulières de titres à écarter pour cette technologie.",
+ "_filtres": {
+  "_doc": "Filtres globaux appliqués aux actualités Google News. titres_exclus : expressions régulières (insensibles à la casse) écartant un article par son titre. sources_exclues : médias écartés. mots_exclus_recherche : termes exclus directement dans la requête Google News.",
+  "mots_exclus_recherche": [
+   "promo",
+   "\"code promo\"",
+   "soldes",
+   "\"bon plan\"",
+   "\"bons plans\"",
+   "coupon",
+   "deals",
+   "\"black friday\"",
+   "\"cyber monday\"",
+   "\"prime day\"",
+   "sponsored",
+   "sponsorisé"
+  ],
+  "titres_exclus": [
+   "\\b(promo(tion)?s?|soldes?|bons? plans?|deals?|coupons?|réduction|remise|discount|black friday|cyber monday|prime day|on sale|en solde|price drop|baisse de prix|vente flash|offre spéciale|sponsoris|sponsored|giveaway|concours|à gagner)\\b",
+   "([$€£]\\s?\\d|\\d+([.,]\\d+)?\\s?(€|\\$|euros?|dollars?)\\b|\\d+\\s?% (off|de réduction|moins cher))",
+   "\\b(best|meilleur(e)?s?|top \\d+|les \\d+ meilleur)",
+   "\\b(vs\\.?|versus)\\b",
+   "\\b(alternatives?|comparatif|comparison|on a testé|we('ve)? tested|nos tests|review|avis \\w+ \\(20\\d\\d\\))\\b",
+   "\\b\\d+\\s+(steps?|étapes|min)\\b",
+   "^\\s*(how to|comment|tuto|guide|tutorial)\\b",
+   "^\\s*(\\d+|cinq|six|sept|huit|neuf|dix|three|four|five|six|seven|eight|nine|ten)\\s+\\w+",
+   "^\\s*(i|i'm|i've|my|here's|voici|j'ai)\\b",
+   "\\bcodes?\\b.*\\((novembre|november|décembre|december|janvier|january|20\\d\\d)",
+   "\\b(horoscope|casino|betting|paris sportifs|crypto(currency)? price|stock price|cours de l'action|shares? (rise|fall|jump))\\b"
+  ],
+  "sources_exclues": [
+   "tech-insider.org",
+   "shattered.io",
+   "troypoint",
+   "hostingadvice",
+   "pocket tactics",
+   "gamerant",
+   "beebom",
+   "dexerto",
+   "kalkine",
+   "tipranks",
+   "youtube",
+   "howl.link",
+   "fourweekmba",
+   "pluang",
+   "orcarouter",
+   "h2s media",
+   "technobezz",
+   "jablickar"
+  ]
+ },
+ "Discord": {
+  "category": "Communication",
+  "query": "Discord mise à jour OR nouveauté OR update",
+  "site": "https://discord.com/blog",
+  "cve": "Discord",
+  "match": [
+   "discord"
+  ],
+  "exclure": [
+   "\\bnitro\\b.*(free|gratuit)",
+   "\\bserver\\b.*\\bjoin\\b"
+  ]
+ },
+ "Obsidian": {
+  "category": "Productivité",
+  "github": "obsidianmd/obsidian-releases",
+  "query": "Obsidian notes app",
+  "site": "https://obsidian.md/changelog/",
+  "cve": "Obsidian",
+  "match": [
+   "obsidian"
+  ],
+  "exclure": [
+   "convertible",
+   "neurizon",
+   "therapeutics",
+   "\\bshares?\\b",
+   "placement"
+  ]
+ },
+ "Pulse Diagnostics": {
+  "category": "Outils",
+  "query": "\"Pulse Diagnostics\"",
+  "cve": "Pulse Diagnostics",
+  "match": [
+   "pulse diagnostics",
+   "pulsediagnostics"
+  ]
+ },
+ "LM Studio": {
+  "category": "IA locale",
+  "github": "lmstudio-ai/lms",
+  "query": "\"LM Studio\" LLM",
+  "site": "https://lmstudio.ai/blog",
+  "cve": "LM Studio",
+  "match": [
+   "lm studio",
+   "lmstudio"
+  ]
+ },
+ "Ollama": {
+  "category": "IA locale",
+  "github": "ollama/ollama",
+  "query": "Ollama LLM",
+  "site": "https://ollama.com/blog",
+  "cve": "Ollama",
+  "match": [
+   "ollama"
+  ]
+ },
+ "Langflow": {
+  "category": "IA locale",
+  "github": "langflow-ai/langflow",
+  "query": "Langflow",
+  "site": "https://www.langflow.org",
+  "cve": "Langflow",
+  "match": [
+   "langflow"
+  ]
+ },
+ "Docker": {
+  "category": "Conteneurs",
+  "github": "moby/moby",
+  "feeds": [
+   "https://www.docker.com/feed/"
+  ],
+  "query": "Docker conteneurs",
+  "site": "https://docs.docker.com/engine/release-notes/",
+  "cve": "Docker",
+  "match": [
+   "docker"
+  ]
+ },
+ "Kernel Linux": {
+  "category": "Systèmes",
+  "kernel": true,
+  "query": "\"noyau Linux\" OR \"Linux kernel\"",
+  "site": "https://www.kernel.org",
+  "cve": "Linux kernel",
+  "match": [
+   "linux kernel",
+   "kernel linux",
+   "noyau linux",
+   "noyau",
+   "linux 6.",
+   "linux 7.",
+   "torvalds"
+  ]
+ },
+ "Debian": {
+  "category": "Systèmes",
+  "feeds": [
+   "https://www.debian.org/News/news"
+  ],
+  "query": "Debian Linux",
+  "site": "https://www.debian.org/News/",
+  "cve": "Debian",
+  "match": [
+   "debian"
+  ]
+ },
+ "Ubuntu": {
+  "category": "Systèmes",
+  "feeds": [
+   "https://ubuntu.com/blog/feed"
+  ],
+  "query": "Ubuntu Linux",
+  "site": "https://ubuntu.com/blog",
+  "cve": "Ubuntu",
+  "match": [
+   "ubuntu"
+  ]
+ },
+ "Alpine Linux": {
+  "category": "Systèmes",
+  "feeds": [
+   "https://alpinelinux.org/atom.xml"
+  ],
+  "query": "\"Alpine Linux\"",
+  "site": "https://alpinelinux.org/posts/",
+  "cve": "Alpine Linux",
+  "match": [
+   "alpine linux",
+   "alpine"
+  ],
+  "exclure": [
+   "\\bski\\b",
+   "\\bF1\\b",
+   "alpine (a\\d+|renault)"
+  ]
+ },
+ "Arch Linux": {
+  "category": "Systèmes",
+  "feeds": [
+   "https://archlinux.org/feeds/news/"
+  ],
+  "query": "\"Arch Linux\"",
+  "site": "https://archlinux.org/news/",
+  "cve": "Arch Linux",
+  "match": [
+   "arch linux",
+   "archlinux"
+  ]
+ },
+ "Kali Linux": {
+  "category": "Systèmes",
+  "feeds": [
+   "https://www.kali.org/rss.xml"
+  ],
+  "query": "\"Kali Linux\"",
+  "site": "https://www.kali.org/blog/",
+  "cve": "Kali Linux",
+  "match": [
+   "kali"
+  ]
+ },
+ "MobaXterm": {
+  "category": "Outils",
+  "query": "MobaXterm",
+  "site": "https://mobaxterm.mobatek.net/download-home-edition.html",
+  "cve": "MobaXterm",
+  "match": [
+   "mobaxterm"
+  ]
+ },
+ "Git for windows": {
+  "category": "Outils",
+  "github": "git-for-windows/git",
+  "query": "\"Git for Windows\"",
+  "site": "https://gitforwindows.org",
+  "cve": "Git for Windows",
+  "match": [
+   "git for windows",
+   "git 2."
+  ]
+ },
+ "Proxmox": {
+  "category": "Virtualisation",
+  "query": "Proxmox VE",
+  "site": "https://www.proxmox.com/en/about/company-details/press-releases",
+  "cve": "Proxmox",
+  "match": [
+   "proxmox"
+  ]
+ },
+ "HyperV": {
+  "category": "Virtualisation",
+  "query": "Hyper-V Microsoft",
+  "site": "https://learn.microsoft.com/virtualization/",
+  "cve": "Hyper-V",
+  "match": [
+   "hyper v",
+   "hyperv"
+  ]
+ },
+ "Pfsens": {
+  "category": "Réseau & sécurité",
+  "query": "pfSense",
+  "site": "https://docs.netgate.com/pfsense/en/latest/releases/",
+  "cve": "pfSense",
+  "match": [
+   "pfsense"
+  ]
+ },
+ "Wireguard": {
+  "category": "Réseau & sécurité",
+  "query": "WireGuard VPN",
+  "site": "https://www.wireguard.com",
+  "cve": "WireGuard",
+  "match": [
+   "wireguard"
+  ]
+ },
+ "Wg-Easy": {
+  "category": "Réseau & sécurité",
+  "github": "wg-easy/wg-easy",
+  "query": "wg-easy WireGuard",
+  "cve": "wg-easy",
+  "match": [
+   "wg easy"
+  ]
+ },
+ "Pi Hole": {
+  "category": "Réseau & sécurité",
+  "github": "pi-hole/pi-hole",
+  "query": "Pi-hole",
+  "site": "https://pi-hole.net/blog/",
+  "cve": "Pi-hole",
+  "match": [
+   "pi hole",
+   "pihole"
+  ]
+ },
+ "Headscale": {
+  "category": "Réseau & sécurité",
+  "github": "juanfont/headscale",
+  "query": "Headscale Tailscale",
+  "cve": "Headscale",
+  "match": [
+   "headscale"
+  ]
+ },
+ "TailScale": {
+  "category": "Réseau & sécurité",
+  "github": "tailscale/tailscale",
+  "feeds": [
+   "https://tailscale.com/blog/index.xml"
+  ],
+  "query": "Tailscale",
+  "site": "https://tailscale.com/changelog",
+  "cve": "Tailscale",
+  "match": [
+   "tailscale"
+  ]
+ },
+ "Virtualbox": {
+  "category": "Virtualisation",
+  "query": "VirtualBox Oracle",
+  "site": "https://www.virtualbox.org/wiki/Changelog",
+  "cve": "VirtualBox",
+  "match": [
+   "virtualbox"
+  ]
+ },
+ "Brave": {
+  "category": "Navigateurs & vie privée",
+  "github": "brave/brave-browser",
+  "query": "\"Brave browser\" OR \"navigateur Brave\"",
+  "site": "https://brave.com/latest/",
+  "cve": "Brave Browser",
+  "match": [
+   "brave"
+  ],
+  "exclure": [
+   "\\bbrave (new world|frontier)\\b"
+  ]
+ },
+ "Mullvad": {
+  "category": "Navigateurs & vie privée",
+  "github": "mullvad/mullvadvpn-app",
+  "feeds": [
+   "https://mullvad.net/en/blog/feed/atom"
+  ],
+  "query": "Mullvad VPN",
+  "site": "https://mullvad.net/en/blog",
+  "cve": "Mullvad",
+  "match": [
+   "mullvad"
+  ]
+ }
 }

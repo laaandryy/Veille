@@ -12,7 +12,9 @@
   :root {
     --bg: #f7f7f5; --surface: #ffffff; --surface-2: #f0f0ec; --border: #e4e4df;
     --text: #18181b; --muted: #6b6b73; --faint: #a1a1aa;
-    --accent: #4f46e5; --accent-soft: #eef0ff; --new: #059669; --new-soft: #e7f7ef;
+    --accent: #4f46e5; --accent-soft: #eef0ff; --orange-deep: #E8631E; --orange-bright: #FF7A2E;
+    --new: var(--orange-deep); --new-soft: #fdeee4;
+    --crit: #dc2626; --crit-soft: #fdecec; --warn: #a16207; --warn-soft: #fdf7d8;
     --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);
     --radius: 14px;
     color-scheme: light;
@@ -21,7 +23,8 @@
     :root {
       --bg: #0d0d10; --surface: #16161a; --surface-2: #1e1e24; --border: #26262d;
       --text: #ececf1; --muted: #9b9ba6; --faint: #5f5f69;
-      --accent: #8b8cff; --accent-soft: #1f1f3a; --new: #34d399; --new-soft: #0f2a20;
+      --accent: #8b8cff; --accent-soft: #1f1f3a; --new: var(--orange-bright); --new-soft: #3a1f10;
+      --crit: #f87171; --crit-soft: #3a1717; --warn: #facc15; --warn-soft: #2f2a0c;
       --shadow: none;
       color-scheme: dark;
     }
@@ -43,7 +46,7 @@
   h1 span { color: var(--muted); font-weight: 600; }
   .lead { color: var(--muted); max-width: 620px; margin: 0; font-size: 16px; }
 
-  .stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin: 32px 0 0; }
+  .stats { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: 12px; margin: 32px 0 0; }
   .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow); }
   .stat b { display: block; font-size: 26px; letter-spacing: -0.02em; font-weight: 700; }
   .stat small { color: var(--muted); font-size: 13px; }
@@ -59,7 +62,7 @@
   .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
   select.sort { border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; font-size: 13px; padding: 8px 10px; border-radius: 10px; }
 
-  main { padding: 28px 0 64px; }
+  main.wrap { padding-top: 28px; padding-bottom: 64px; }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px; min-width: 0; }
   .card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
@@ -84,10 +87,32 @@
   .links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; padding-top: 4px; }
   .links a, .links span { font-size: 12px; color: var(--muted); border: 1px solid var(--border); padding: 4px 9px; border-radius: 8px; }
   .links a:hover { color: var(--text); border-color: var(--faint); }
+  .seg { display: inline-flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 3px; flex: none; }
+  .seg button { border: 0; background: transparent; color: var(--muted); font: inherit; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 7px; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .seg .n { font-size: 11px; background: var(--crit-soft); color: var(--crit); padding: 0 6px; border-radius: 999px; }
+  .badge-cve { flex: none; font-size: 12px; font-weight: 600; color: var(--crit); background: var(--crit-soft); padding: 3px 9px; border-radius: 999px; border: 0; cursor: pointer; font-family: inherit; }
+  .head-badges { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  ul.cves { list-style: none; margin: 0; padding: 0; }
+  ul.cves li { border-top: 1px solid var(--border); }
+  ul.cves li:first-child { border-top: 0; }
+  ul.cves a { display: block; padding: 10px 0; }
+  ul.cves a:hover .cid { color: var(--accent); }
+  .cve-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .cid { font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; font-weight: 500; }
+  .sev { font-size: 11px; font-weight: 700; letter-spacing: .03em; padding: 1px 7px; border-radius: 5px; }
+  .sev.CRITICAL { background: var(--crit); color: #fff; }
+  .sev.HIGH { background: var(--crit-soft); color: var(--crit); }
+  .sev.MEDIUM { background: var(--warn-soft); color: var(--warn); }
+  .sev.LOW, .sev.NA { background: var(--surface-2); color: var(--muted); }
+  .kev { font-size: 11px; font-weight: 700; color: var(--crit); }
+  .cdesc { font-size: 13px; color: var(--muted); margin-top: 3px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .note { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
   .none { text-align: center; color: var(--muted); padding: 48px 0; display: none; }
-  footer { border-top: 1px solid var(--border); color: var(--faint); font-size: 13px; padding: 24px 0 40px; }
+  footer.wrap { border-top: 1px solid var(--border); color: var(--faint); font-size: 13px; padding-top: 24px; padding-bottom: 40px; }
   footer a { text-decoration: underline; text-underline-offset: 2px; }
 
+  @media (max-width: 1000px) { .stats { grid-template-columns: repeat(3, minmax(0,1fr)); } }
   @media (max-width: 720px) {
     header.hero { padding-top: 40px; }
     .stats { grid-template-columns: repeat(2, minmax(0,1fr)); }
@@ -106,13 +131,17 @@
 
 <div class="toolbar">
   <div class="wrap">
+    <div class="seg" role="tablist" aria-label="Vue">
+      <button id="v-news" aria-pressed="true">Actualités</button>
+      <button id="v-cve" aria-pressed="false">Failles CVE <span class="n" id="cve-n"></span></button>
+    </div>
     <label class="search">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="Rechercher une technologie, un titre…" autocomplete="off">
     </label>
     <select class="sort" id="sort" aria-label="Trier">
       <option value="recent">Activité récente</option>
-      <option value="new">Nouveautés d'abord</option>
+      <option value="new">Nouveautés / gravité d'abord</option>
       <option value="name">Ordre alphabétique</option>
     </select>
     <div class="chips" id="chips" role="toolbar" aria-label="Catégories"></div>
@@ -120,13 +149,14 @@
 </div>
 
 <main class="wrap">
+  <p class="note" id="note" hidden>CVE publiées sur les 30 derniers jours dans la base NVD (NIST) dont la description cite la technologie. 5 plus récentes au maximum par technologie. « Exploitée » = présente au catalogue CISA KEV.</p>
   <div class="grid" id="grid"></div>
   <p class="none" id="none">Aucun résultat pour ce filtre.</p>
 </main>
 
 <footer class="wrap">
   Généré automatiquement par la tâche planifiée <b>veille</b> à partir de <a href="technologies.csv">technologies.csv</a>.
-  Sources : GitHub Releases, kernel.org, flux officiels, Google News.
+  Sources : GitHub Releases, kernel.org, flux officiels, Google News, NVD (NIST).
 </footer>
 
 <script>
@@ -155,7 +185,44 @@ const DATA = /*__DATA__*/null;
     [st.new, "nouveautés depuis hier"],
     [st.releases_week, "versions cette semaine"],
     [st.news, "articles retenus"],
+    [st.cves ?? 0, "CVE récentes" + (st.cves_critical ? ` · ${st.cves_critical} élevées/critiques` : "")],
   ].map(([n, l]) => `<div class="stat"><b>${n}</b><small>${l}</small></div>`).join("");
+
+  const SEV_FR = { CRITICAL: "Critique", HIGH: "Élevée", MEDIUM: "Moyenne", LOW: "Faible" };
+  const SEV_RANK = { CRITICAL: 4, HIGH: 3, MEDIUM: 2, LOW: 1 };
+  DATA.results.forEach((r) => { r.cves = r.cves || []; });
+  const cveCount = DATA.results.reduce((n, r) => n + r.cves.length, 0);
+  $("cve-n").textContent = cveCount || "";
+  let view = location.hash === "#cve" ? "cve" : "news";
+  const setView = (v) => {
+    view = v;
+    $("v-news").setAttribute("aria-pressed", v === "news");
+    $("v-cve").setAttribute("aria-pressed", v === "cve");
+    $("note").hidden = v !== "cve";
+    history.replaceState(null, "", v === "cve" ? "#cve" : location.pathname + location.search);
+    draw();
+  };
+  $("v-news").addEventListener("click", () => setView("news"));
+  $("v-cve").addEventListener("click", () => setView("cve"));
+  $("grid").addEventListener("click", (e) => {
+    const b = e.target.closest(".badge-cve"); if (!b) return;
+    $("q").value = b.dataset.name; setView("cve"); window.scrollTo({ top: $("grid").offsetTop - 140, behavior: "smooth" });
+  });
+
+  const cveCard = (r) => `<article class="card">
+      <div class="card-head"><div><h2>${esc(r.name)}</h2><div class="cat">${esc(r.category)}</div></div>
+        <div class="head-badges">${r.cve_total > r.cves.length ? `<span class="badge-new" style="color:var(--muted);background:var(--surface-2)">${r.cve_total} sur 30 j</span>` : ""}</div></div>
+      <ul class="cves">${r.cves.map((c) => `<li><a href="${esc(c.url)}" target="_blank" rel="noopener">
+        <div class="cve-top"><span class="cid">${esc(c.id)}</span>
+          <span class="sev ${esc(c.severity || "NA")}">${esc(SEV_FR[c.severity] || "Non notée")}${c.score != null ? " " + esc(c.score) : ""}</span>
+          ${c.exploited ? '<span class="kev">● Exploitée</span>' : ""}</div>
+        <div class="cdesc">${esc(c.summary)}</div>
+        <div class="meta">${c.new ? '<span class="nw">Nouvelle</span>·' : ""}<span>publiée ${esc(ago(c.date))}</span></div>
+      </a></li>`).join("")}</ul>
+      ${r.cve_stale ? '<p class="empty">NVD indisponible lors du dernier passage : données de la veille précédente.</p>' : ""}
+    </article>`;
+  const maxSev = (r) => Math.max(0, ...r.cves.map((c) => SEV_RANK[c.severity] || 0));
+  const lastCve = (r) => Math.max(0, ...r.cves.map((c) => c.date ? Date.parse(c.date) : 0));
 
   const cats = ["Toutes", ...[...new Set(DATA.results.map((r) => r.category))].sort((a, b) => a.localeCompare(b, "fr"))];
   let cat = "Toutes";
@@ -185,7 +252,8 @@ const DATA = /*__DATA__*/null;
       : `<span>${esc(l.label)}</span>`).join("");
     return `<article class="card">
       <div class="card-head"><div><h2>${esc(r.name)}</h2><div class="cat">${esc(r.category)}</div></div>
-        ${r.new_count ? `<span class="badge-new">${r.new_count} nouveau${r.new_count > 1 ? "x" : ""}</span>` : ""}</div>
+        <div class="head-badges">${r.cves.length ? `<button class="badge-cve" data-name="${esc(r.name)}" title="Voir les failles">${r.cves.length} CVE</button>` : ""}
+        ${r.new_count ? `<span class="badge-new">${r.new_count} nouveau${r.new_count > 1 ? "x" : ""}</span>` : ""}</div></div>
       ${relHtml}
       <div><div class="label">Actualités</div>${news}</div>
       ${links ? `<div class="links">${links}</div>` : ""}
@@ -195,8 +263,21 @@ const DATA = /*__DATA__*/null;
   const draw = () => {
     const q = $("q").value.trim().toLowerCase();
     const sort = $("sort").value;
+    const text = (r) => view === "cve"
+      ? r.name + " " + r.category + " " + r.cves.map((c) => c.id + " " + c.summary).join(" ")
+      : r.name + " " + r.category + " " + r.news.map((n) => n.title).join(" ");
     let list = DATA.results.filter((r) => (cat === "Toutes" || r.category === cat) &&
-      (!q || (r.name + " " + r.category + " " + r.news.map((n) => n.title).join(" ")).toLowerCase().includes(q)));
+      (view !== "cve" || r.cves.length) && (!q || text(r).toLowerCase().includes(q)));
+    if (view === "cve") {
+      list.sort(sort === "name" ? (a, b) => a.name.localeCompare(b.name, "fr")
+        : sort === "new" ? (a, b) => maxSev(b) - maxSev(a) || lastCve(b) - lastCve(a)
+        : (a, b) => lastCve(b) - lastCve(a));
+      $("grid").innerHTML = list.map(cveCard).join("");
+      $("none").textContent = cveCount ? "Aucune CVE pour ce filtre." : "Aucune CVE récente pour les technologies suivies.";
+      $("none").style.display = list.length ? "none" : "block";
+      return;
+    }
+    $("none").textContent = "Aucun résultat pour ce filtre.";
     list.sort(sort === "name" ? (a, b) => a.name.localeCompare(b.name, "fr")
       : sort === "new" ? (a, b) => b.new_count - a.new_count || lastActivity(b) - lastActivity(a)
       : (a, b) => lastActivity(b) - lastActivity(a));
@@ -205,7 +286,7 @@ const DATA = /*__DATA__*/null;
   };
   $("q").addEventListener("input", draw);
   $("sort").addEventListener("change", draw);
-  draw();
+  setView(view);
 })();
 </script>
 </body>

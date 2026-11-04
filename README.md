@@ -22,8 +22,22 @@ Ajoutez une ligne `Nom;Infos` dans `technologies.csv`. Si la colonne « Informat
 contient une URL GitHub, ses releases sont suivies automatiquement. Pour affiner (catégorie, dépôt,
 flux officiels, requête de recherche, lien officiel), ajoutez une entrée dans `scripts/sources.json`.
 
+## Filtrage des actualités
+
+Les articles Google News sont filtrés pour écarter publicités, promotions, comparatifs,
+tutoriels et billets hors sujet : le nom de la technologie (ou un terme de `match`) doit figurer
+dans le titre, et les filtres globaux de `_filtres` dans `scripts/sources.json`
+(titres exclus, médias exclus, mots exclus de la recherche) s'appliquent. Ajustez-les librement.
+
 ## En local
 
 ```bash
 python3 scripts/veille.py   # Python 3.10+, aucune dépendance
 ```
+
+## Failles (CVE)
+
+L'onglet **Failles CVE** liste, pour chaque technologie, les 5 CVE les plus récentes publiées sur
+30 jours dans la base [NVD](https://nvd.nist.gov) (recherche de l'expression `cve` de `sources.json`
+dans la description). Sans clé, la NVD limite le débit (≈ 3 min de collecte). Facultatif : créer
+un secret `NVD_API_KEY` (clé gratuite sur nvd.nist.gov) pour accélérer.
