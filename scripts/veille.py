@@ -18,6 +18,7 @@ import json
 import os
 import re
 import sys
+import unicodedata
 import time
 import urllib.parse
 import urllib.request
@@ -100,9 +101,46 @@ def read_technologies() -> list[dict]:
     return techs
 
 
-def load_sources() -> dict:
+def load_sources() -> tuple[dict, dict]:
     data = json.loads(SOURCES_PATH.read_text(encoding="utf-8"))
-    return {k.strip().lower(): v for k, v in data.items() if not k.startswith("_")}
+    sources = {k.strip().lower(): v for k, v in data.items() if not k.startswith("_")}
+    return sources, data.get("_filtres", {})
+
+
+# --------------------------------------------------------------------------- filtres
+def norm(s: str) -> str:
+    """Minuscules, sans accents ni ponctuation, pour comparer des titres."""
+    s = unicodedata.normalize("NFKD", s or "").encode("ascii", "ignore").decode().lower()
+    return " " + re.sub(r"[^a-z0-9.+]+", " ", s).strip() + " "
+
+
+class NewsFilter:
+    """Écarte les articles hors sujet ou commerciaux (pubs, promos, comparatifs…)."""
+
+    def __init__(self, cfg: dict):
+        self.title_re = re.compile("|".join(cfg.get("titres_exclus", [])) or r"(?!x)x", re.I)
+        self.sources = [norm(x) for x in cfg.get("sources_exclues", [])]
+        self.dropped = 0
+
+    def ok(self, item: dict, terms: list[str]) -> bool:
+        title = item["title"]
+        if self.title_re.search(title):
+            return self._drop()
+        src = norm(item.get("source") or "") + norm(urllib.parse.urlparse(item["url"]).netloc)
+        if any(b in src for b in self.sources):
+            return self._drop()
+        # Hors flux officiels : la technologie doit être nommée dans le titre.
+        if not item.get("official") and terms and not any(t in norm(title) for t in terms):
+            return self._drop()
+        return True
+
+    def _drop(self) -> bool:
+        self.dropped += 1
+        return False
+
+
+NEWS_FILTER: NewsFilter | None = None
+NEWS_FILTER_CFG: dict = {}
 
 
 def github_repo_from(url: str) -> str | None:
@@ -222,9 +260,10 @@ def official_feed(url: str) -> list[dict]:
         return []
 
 
-def google_news(query: str, lang: str) -> list[dict]:
+def google_news(query: str, lang: str, negative: str = "") -> list[dict]:
     params = {"fr": "hl=fr&gl=FR&ceid=FR:fr", "en": "hl=en-US&gl=US&ceid=US:en"}[lang]
-    url = f"https://news.google.com/rss/search?q={urllib.parse.quote(query + ' when:30d')}&{params}"
+    q = " ".join(x for x in (query, negative, "when:30d") if x)
+    url = f"https://news.google.com/rss/search?q={urllib.parse.quote(q)}&{params}"
     try:
         return [dict(i, lang=lang) for i in parse_feed(fetch(url))]
     except Exception as e:  # noqa: BLE001
@@ -326,8 +365,13 @@ def collect(tech: dict, cfg: dict) -> dict:
     news: list[dict] = []
     for f in cfg.get("feeds", []):
         news += official_feed(f)
-    news += google_news(query, "fr")
-    news += google_news(query, "en")
+    negative = " ".join(f"-{w}" for w in NEWS_FILTER_CFG.get("mots_exclus_recherche", []))
+    news += google_news(query, "fr", negative)
+    news += google_news(query, "en", negative)
+    # Termes devant figurer dans le titre : "match" de sources.json, sinon le nom.
+    terms = [" " + norm(t).strip() for t in cfg.get("match", [name])]
+    extra = re.compile("|".join(cfg["exclure"]), re.I) if cfg.get("exclure") else None
+    news = [n for n in news if NEWS_FILTER.ok(n, terms) and not (extra and extra.search(n["title"]))]
 
     cutoff = NOW - timedelta(days=NEWS_WINDOW_DAYS)
     seen_urls, seen_titles, kept = set(), set(), []
@@ -392,8 +436,10 @@ def render(payload: dict) -> str:
 
 
 def main() -> int:
+    global NEWS_FILTER, NEWS_FILTER_CFG
     techs = read_technologies()
-    sources = load_sources()
+    sources, NEWS_FILTER_CFG = load_sources()
+    NEWS_FILTER = NewsFilter(NEWS_FILTER_CFG)
     log(f"{len(techs)} technologies à suivre")
     with ThreadPoolExecutor(max_workers=6) as pool:
         results = list(pool.map(lambda t: collect(t, sources.get(t["name"].lower(), {})), techs))
@@ -404,6 +450,7 @@ def main() -> int:
             previous = json.loads(DATA_PATH.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             previous = {}
+    log(f"Filtre actualités : {NEWS_FILTER.dropped} articles écartés")
     history = mark_new(results, previous.get("history", {}))
     collect_cves(results, sources, previous)
 
