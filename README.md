@@ -27,3 +27,10 @@ flux officiels, requête de recherche, lien officiel), ajoutez une entrée dans 
 ```bash
 python3 scripts/veille.py   # Python 3.10+, aucune dépendance
 ```
+
+## Failles (CVE)
+
+L'onglet **Failles CVE** liste, pour chaque technologie, les 5 CVE les plus récentes publiées sur
+30 jours dans la base [NVD](https://nvd.nist.gov) (recherche de l'expression `cve` de `sources.json`
+dans la description). Sans clé, la NVD limite le débit (≈ 3 min de collecte). Facultatif : créer
+un secret `NVD_API_KEY` (clé gratuite sur nvd.nist.gov) pour accélérer.

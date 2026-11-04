@@ -18,6 +18,7 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
@@ -38,6 +39,8 @@ NEWS_WINDOW_DAYS = 30      # actualités plus anciennes ignorées
 MAX_NEWS = 6               # actualités affichées par technologie
 MAX_RELEASES = 3
 HISTORY_DAYS = 120         # durée de conservation des liens « déjà vus »
+CVE_WINDOW_DAYS = 30       # CVE publiées sur les 30 derniers jours
+MAX_CVES = 5               # CVE affichées par technologie
 UA = "veille-bot/1.0 (+https://github.com/laaandryy/Veille)"
 TIMEOUT = 20
 
@@ -229,6 +232,84 @@ def google_news(query: str, lang: str) -> list[dict]:
         return []
 
 
+def nvd_cves(keyword: str) -> list[dict] | None:
+    """CVE récentes de la base NVD (NIST) dont la description contient `keyword`.
+
+    Renvoie None en cas d'échec (pour conserver les données de la veille précédente).
+    Sans clé API, la NVD autorise 5 requêtes / 30 s : l'appelant espace les appels.
+    """
+    start = (NOW - timedelta(days=CVE_WINDOW_DAYS)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    end = NOW.strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    params = urllib.parse.urlencode({
+        "keywordSearch": keyword, "keywordExactMatch": "",
+        "pubStartDate": start, "pubEndDate": end, "resultsPerPage": 2000,
+        "noRejected": "",
+    }).replace("keywordExactMatch=&", "keywordExactMatch&").replace("&noRejected=", "&noRejected")
+    url = f"https://services.nvd.nist.gov/rest/json/cves/2.0?{params}"
+    headers = {"apiKey": os.environ["NVD_API_KEY"]} if os.environ.get("NVD_API_KEY") else {}
+    data = None
+    for attempt in range(3):
+        try:
+            data = json.loads(fetch(url, headers))
+            break
+        except Exception as e:  # noqa: BLE001
+            log(f"  ! nvd '{keyword}' (essai {attempt + 1}): {e}")
+            time.sleep(12 * (attempt + 1))
+    if data is None:
+        return None
+    out = []
+    for v in data.get("vulnerabilities", []):
+        c = v.get("cve", {})
+        if c.get("vulnStatus") == "Rejected":
+            continue
+        desc = next((d["value"] for d in c.get("descriptions", []) if d.get("lang") == "en"), "")
+        sev, score = None, None
+        metrics = c.get("metrics", {})
+        for k in ("cvssMetricV40", "cvssMetricV31", "cvssMetricV30", "cvssMetricV2"):
+            if metrics.get(k):
+                m = metrics[k][0]
+                cd = m.get("cvssData", {})
+                score = cd.get("baseScore")
+                sev = cd.get("baseSeverity") or m.get("baseSeverity")
+                break
+        out.append({
+            "id": c.get("id"),
+            "url": f"https://nvd.nist.gov/vuln/detail/{c.get('id')}",
+            "date": iso(parse_date(c.get("published"))),
+            "severity": (sev or "").upper() or None,
+            "score": score,
+            "exploited": bool(c.get("cisaExploitAdd")),
+            "summary": clean_text(desc, 260),
+        })
+    out.sort(key=lambda x: x["date"] or "", reverse=True)
+    for c in out:
+        d = parse_date(c["date"])
+        c["new"] = bool(d and NOW - d < timedelta(hours=48))
+    return out
+
+
+def collect_cves(results: list[dict], sources: dict, previous: dict) -> None:
+    """Interroge la NVD séquentiellement (limite de débit) et remplit r['cves']."""
+    prev = {r["name"]: r.get("cves", []) for r in previous.get("results", [])}
+    pause = 0.8 if os.environ.get("NVD_API_KEY") else 6.5
+    for i, r in enumerate(results):
+        cfg = sources.get(r["name"].lower(), {})
+        keyword = cfg.get("cve", r["name"])
+        if not keyword:  # "cve": "" dans sources.json pour désactiver
+            r["cves"], r["cve_total"] = [], 0
+            continue
+        if i:
+            time.sleep(pause)
+        found = nvd_cves(keyword)
+        if found is None:
+            r["cves"] = prev.get(r["name"], [])
+            r["cve_total"] = len(r["cves"])
+            r["cve_stale"] = True
+        else:
+            r["cves"], r["cve_total"] = found[:MAX_CVES], len(found)
+        log(f"- CVE {r['name']} ({keyword}) : {r['cve_total']}")
+
+
 # --------------------------------------------------------------------------- pipeline
 def collect(tech: dict, cfg: dict) -> dict:
     name = tech["name"]
@@ -324,6 +405,7 @@ def main() -> int:
         except json.JSONDecodeError:
             previous = {}
     history = mark_new(results, previous.get("history", {}))
+    collect_cves(results, sources, previous)
 
     total_items = sum(len(r["news"]) + len(r["releases"]) for r in results)
     if total_items == 0 and previous.get("results"):
@@ -335,6 +417,8 @@ def main() -> int:
         "results": results,
         "stats": {
             "technologies": len(results),
+            "cves": sum(len(r["cves"]) for r in results),
+            "cves_critical": sum(1 for r in results for c in r["cves"] if c["severity"] in ("CRITICAL", "HIGH")),
             "news": sum(len(r["news"]) for r in results),
             "new": sum(r["new_count"] for r in results),
             "releases_week": sum(
