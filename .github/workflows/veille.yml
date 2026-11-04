@@ -1,0 +1,64 @@
+name: veille
+
+# Tâche planifiée « veille » : collecte quotidienne des nouveautés pour chaque
+# technologie de technologies.csv, puis régénère index.html et le pousse sur main.
+on:
+  schedule:
+    - cron: "0 5 * * *"        # tous les jours à 05:00 UTC (6 h/7 h à Paris)
+  workflow_dispatch: {}         # lancement manuel depuis l'onglet Actions
+  push:
+    branches: [main]
+    paths:                      # régénère aussitôt quand la liste ou le script change
+      - technologies.csv
+      - scripts/**
+  pull_request:                 # sur une PR : génération à blanc, sans commit
+    paths:
+      - technologies.csv
+      - scripts/**
+      - .github/workflows/veille.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: veille
+  cancel-in-progress: false
+
+jobs:
+  veille:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Collecter la veille et générer index.html
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/veille.py
+
+      - name: Aperçu (PR uniquement)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: apercu-index
+          path: index.html
+
+      - name: Pousser sur main
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "veille-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html data/veille.json
+          if git diff --cached --quiet; then
+            echo "Aucun changement."
+            exit 0
+          fi
+          git commit -m "veille: mise à jour du $(date -u +'%Y-%m-%d')"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && break
+            sleep $((i * 5))
+          done
