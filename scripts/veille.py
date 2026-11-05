@@ -18,6 +18,7 @@ import json
 import os
 import re
 import sys
+from fnmatch import fnmatch
 import unicodedata
 import time
 import urllib.parse
@@ -97,7 +98,8 @@ def read_technologies() -> list[dict]:
             continue
         name = row[0].strip()
         info = row[1].strip() if len(row) > 1 else ""
-        techs.append({"name": name, "info": info})
+        installed = row[2].strip() if len(row) > 2 else ""
+        techs.append({"name": name, "info": info, "installed": installed})
     return techs
 
 
@@ -271,8 +273,64 @@ def google_news(query: str, lang: str, negative: str = "") -> list[dict]:
         return []
 
 
-def nvd_cves(keyword: str) -> list[dict] | None:
+def parse_version(s: str | None) -> tuple[int, ...] | None:
+    """'v1.2.3', 'Release 1.2.3 (…)', '2.51.0.windows.1' -> (1, 2, 3)."""
+    m = re.search(r"\d+(?:\.\d+)*", s or "")
+    return tuple(int(x) for x in m.group(0).split(".")) if m else None
+
+
+def vcmp(a: tuple, b: tuple) -> int:
+    n = max(len(a), len(b))
+    a, b = a + (0,) * (n - len(a)), b + (0,) * (n - len(b))
+    return (a > b) - (a < b)
+
+
+def cpe_affects(match: dict, version: tuple) -> bool:
+    """La version installée tombe-t-elle dans la plage vulnérable d'un cpeMatch NVD ?"""
+    exact = match["criteria"].split(":")[5]
+    if exact not in ("*", "-"):
+        v = parse_version(exact)
+        return bool(v) and vcmp(version, v) == 0
+    bounds = (("versionStartIncluding", lambda c: c >= 0), ("versionStartExcluding", lambda c: c > 0),
+              ("versionEndIncluding", lambda c: c <= 0), ("versionEndExcluding", lambda c: c < 0))
+    for key, ok in bounds:
+        if match.get(key):
+            b = parse_version(match[key])
+            if b and not ok(vcmp(version, b)):
+                return False
+    return True
+
+
+def cpe_check(cve: dict, patterns: list[str], installed: tuple | None) -> tuple[str, bool | None]:
+    """Statut produit d'une CVE d'après ses configurations CPE.
+
+    'confirmed' : un CPE vulnérable correspond à la technologie ;
+    'pending'   : CVE pas encore analysée par la NVD (aucun CPE) ;
+    'other'     : analysée, mais concerne un autre produit (à écarter).
+    Second élément : la version installée est-elle concernée ? (None si inconnu)
+    """
+    matches = [m for conf in cve.get("configurations", []) for node in conf.get("nodes", [])
+               for m in node.get("cpeMatch", []) if m.get("vulnerable")]
+    if not matches:
+        return "pending", None
+    mine = []
+    for m in matches:
+        parts = m.get("criteria", "").split(":")
+        if len(parts) > 5 and any(fnmatch(f"{parts[3]}:{parts[4]}", p) for p in patterns):
+            mine.append(m)
+    if not mine:
+        return "other", None
+    if not installed:
+        return "confirmed", None
+    return "confirmed", any(cpe_affects(m, installed) for m in mine)
+
+
+def nvd_cves(keyword: str, patterns: list[str] | None = None, installed: str = "") -> list[dict] | None:
     """CVE récentes de la base NVD (NIST) dont la description contient `keyword`.
+
+    Si `patterns` (motifs 'éditeur:produit' des CPE) est fourni, les CVE déjà analysées
+    qui visent un autre produit sont écartées, et la version installée est comparée
+    aux plages vulnérables.
 
     Renvoie None en cas d'échec (pour conserver les données de la veille précédente).
     Sans clé API, la NVD autorise 5 requêtes / 30 s : l'appelant espace les appels.
@@ -311,7 +369,14 @@ def nvd_cves(keyword: str) -> list[dict] | None:
                 score = cd.get("baseScore")
                 sev = cd.get("baseSeverity") or m.get("baseSeverity")
                 break
+        status, affects = ("keyword", None)
+        if patterns:
+            status, affects = cpe_check(c, patterns, parse_version(installed) if installed else None)
+            if status == "other":
+                continue
         out.append({
+            "status": status,
+            "affects": affects,
             "id": c.get("id"),
             "url": f"https://nvd.nist.gov/vuln/detail/{c.get('id')}",
             "date": iso(parse_date(c.get("published"))),
@@ -339,14 +404,22 @@ def collect_cves(results: list[dict], sources: dict, previous: dict) -> None:
             continue
         if i:
             time.sleep(pause)
-        found = nvd_cves(keyword)
+        found = nvd_cves(keyword, cfg.get("cpe"), r.get("installed", ""))
         if found is None:
             r["cves"] = prev.get(r["name"], [])
             r["cve_total"] = len(r["cves"])
             r["cve_stale"] = True
         else:
-            r["cves"], r["cve_total"] = found[:MAX_CVES], len(found)
-        log(f"- CVE {r['name']} ({keyword}) : {r['cve_total']}")
+            # Les CVE qui touchent la version installée passent en priorité dans les 5 affichées.
+            mine = [c for c in found if c.get("affects")]
+            rest = [c for c in found if not c.get("affects")]
+            r["cves"] = sorted(mine[:MAX_CVES] + rest[: max(0, MAX_CVES - len(mine))],
+                               key=lambda c: c["date"] or "", reverse=True)
+            r["cve_total"] = len(found)
+            r["cves_affecting"] = len(mine)
+            r["cves_pending"] = sum(1 for c in found if c["status"] == "pending")
+        log(f"- CVE {r['name']} ({keyword}) : {r['cve_total']} "
+            f"(à confirmer {r.get('cves_pending', 0)}, version installée {r.get('cves_affecting', 0)})")
 
 
 # --------------------------------------------------------------------------- pipeline
@@ -398,8 +471,25 @@ def collect(tech: dict, cfg: dict) -> dict:
     if info and not info.startswith("http"):
         links.append({"label": f"Note : {info}", "url": None})
 
+    installed = tech.get("installed", "")
+    latest, status = None, None
+    iv = parse_version(installed)
+    if iv and releases:
+        cands = [(parse_version(x["tag"] or x["version"]), x) for x in releases]
+        cands = [(v, x) for v, x in cands if v]
+        if cfg.get("kernel"):  # noyau : comparer dans la même branche (ex. 6.1.x LTS)
+            same = [(v, x) for v, x in cands if v[:2] == iv[:2]]
+            cands = same or cands
+        if cands:
+            v, x = max(cands, key=lambda t: t[0] + (0,) * (6 - len(t[0])))
+            latest = x["tag"] or x["version"]
+            status = "update" if vcmp(iv, v) < 0 else "ok"
+
     return {
         "name": name,
+        "installed": installed,
+        "latest_version": latest,
+        "version_status": status,
         "category": cfg.get("category", "Autres"),
         "repo": repo,
         "repo_meta": repo_meta,
@@ -465,6 +555,8 @@ def main() -> int:
         "stats": {
             "technologies": len(results),
             "cves": sum(len(r["cves"]) for r in results),
+            "to_update": sum(1 for r in results if r.get("version_status") == "update"),
+            "cves_affecting": sum(r.get("cves_affecting", 0) for r in results),
             "cves_critical": sum(1 for r in results for c in r["cves"] if c["severity"] in ("CRITICAL", "HIGH")),
             "news": sum(len(r["news"]) for r in results),
             "new": sum(r["new_count"] for r in results),

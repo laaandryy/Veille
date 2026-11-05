@@ -1,27 +1,27 @@
-Logiciel/OS/Technologies;Informations complémentaires
-Discord;
-Obsidian;obisidan.md
-Pulse Diagnostics;https://github.com/Regncreative/PulseDiagnostics
-LM Studio;
-Ollama;
-Langflow;
-Docker;
-Kernel Linux;
-Debian;
-Ubuntu;
-Alpine Linux;
-Arch Linux;
-Kali Linux;
-MobaXterm;
-Git for windows;
-Proxmox ;
-HyperV;
-Pfsens;
-Wireguard;
-Wg-Easy;https://github.com/wg-easy/wg-easy
-Pi Hole;https://github.com/pi-hole/docker-pi-hole
-Headscale;https://github.com/juanfont/headscale
-TailScale;
-Virtualbox;
-Brave;
-Mullvad;
+Logiciel/OS/Technologies;Informations complémentaires;Version installée
+Discord;;
+Obsidian;obisidan.md;
+Pulse Diagnostics;https://github.com/Regncreative/PulseDiagnostics;
+LM Studio;;
+Ollama;;
+Langflow;;
+Docker;;
+Kernel Linux;;
+Debian;;
+Ubuntu;;
+Alpine Linux;;
+Arch Linux;;
+Kali Linux;;
+MobaXterm;;
+Git for windows;;
+Proxmox ;;
+HyperV;;
+Pfsens;;
+Wireguard;;
+Wg-Easy;https://github.com/wg-easy/wg-easy;
+Pi Hole;https://github.com/pi-hole/docker-pi-hole;
+Headscale;https://github.com/juanfont/headscale;
+TailScale;;
+Virtualbox;;
+Brave;;
+Mullvad;;

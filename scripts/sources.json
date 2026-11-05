@@ -1,5 +1,5 @@
 {
- "_doc": "Sources par technologie. Clé = nom exact (insensible à la casse) de technologies.csv. Champs : category, github (owner/repo, releases), feeds (RSS/Atom officiels), query (recherche actualités), site (lien officiel). Toute techno absente ici est suivie via la recherche d'actualités sur son nom. cve : mot-clé (expression exacte) cherché dans les CVE de la NVD ; chaîne vide pour désactiver. match : termes dont au moins un doit figurer dans le titre d'un article (défaut : le nom). exclure : expressions régulières de titres à écarter pour cette technologie.",
+ "_doc": "Sources par technologie. Clé = nom exact (insensible à la casse) de technologies.csv. Champs : category, github (owner/repo, releases), feeds (RSS/Atom officiels), query (recherche actualités), site (lien officiel). Toute techno absente ici est suivie via la recherche d'actualités sur son nom. cve : mot-clé (expression exacte) cherché dans les CVE de la NVD ; chaîne vide pour désactiver. match : termes dont au moins un doit figurer dans le titre d'un article (défaut : le nom). exclure : expressions régulières de titres à écarter pour cette technologie. cpe : motifs 'éditeur:produit' (jokers *) des identifiants CPE NVD ; une CVE déjà analysée qui ne vise aucun de ces produits est écartée, et la version installée (3e colonne du CSV) est comparée aux plages vulnérables.",
  "_filtres": {
   "_doc": "Filtres globaux appliqués aux actualités Google News. titres_exclus : expressions régulières (insensibles à la casse) écartant un article par son titre. sources_exclues : médias écartés. mots_exclus_recherche : termes exclus directement dans la requête Google News.",
   "mots_exclus_recherche": [
@@ -61,6 +61,9 @@
   "exclure": [
    "\\bnitro\\b.*(free|gratuit)",
    "\\bserver\\b.*\\bjoin\\b"
+  ],
+  "cpe": [
+   "discord:*"
   ]
  },
  "Obsidian": {
@@ -78,6 +81,11 @@
    "therapeutics",
    "\\bshares?\\b",
    "placement"
+  ],
+  "cpe": [
+   "obsidian:*",
+   "obsidianmd:*",
+   "*:obsidian"
   ]
  },
  "Pulse Diagnostics": {
@@ -87,6 +95,10 @@
   "match": [
    "pulse diagnostics",
    "pulsediagnostics"
+  ],
+  "cpe": [
+   "regncreative:*",
+   "*:pulse*diagnostics"
   ]
  },
  "LM Studio": {
@@ -98,6 +110,12 @@
   "match": [
    "lm studio",
    "lmstudio"
+  ],
+  "cpe": [
+   "lmstudio:*",
+   "lm_studio:*",
+   "*:lm_studio",
+   "*:lmstudio"
   ]
  },
  "Ollama": {
@@ -108,6 +126,10 @@
   "cve": "Ollama",
   "match": [
    "ollama"
+  ],
+  "cpe": [
+   "ollama:*",
+   "*:ollama"
   ]
  },
  "Langflow": {
@@ -118,6 +140,10 @@
   "cve": "Langflow",
   "match": [
    "langflow"
+  ],
+  "cpe": [
+   "langflow*:*",
+   "*:langflow"
   ]
  },
  "Docker": {
@@ -131,6 +157,11 @@
   "cve": "Docker",
   "match": [
    "docker"
+  ],
+  "cpe": [
+   "docker:*",
+   "mobyproject:*",
+   "*:moby"
   ]
  },
  "Kernel Linux": {
@@ -147,6 +178,9 @@
    "linux 6.",
    "linux 7.",
    "torvalds"
+  ],
+  "cpe": [
+   "linux:linux_kernel"
   ]
  },
  "Debian": {
@@ -159,6 +193,9 @@
   "cve": "Debian",
   "match": [
    "debian"
+  ],
+  "cpe": [
+   "debian:*"
   ]
  },
  "Ubuntu": {
@@ -171,6 +208,9 @@
   "cve": "Ubuntu",
   "match": [
    "ubuntu"
+  ],
+  "cpe": [
+   "canonical:*"
   ]
  },
  "Alpine Linux": {
@@ -189,6 +229,10 @@
    "\\bski\\b",
    "\\bF1\\b",
    "alpine (a\\d+|renault)"
+  ],
+  "cpe": [
+   "alpinelinux:*",
+   "*:alpine_linux"
   ]
  },
  "Arch Linux": {
@@ -202,6 +246,10 @@
   "match": [
    "arch linux",
    "archlinux"
+  ],
+  "cpe": [
+   "archlinux:*",
+   "*:arch_linux"
   ]
  },
  "Kali Linux": {
@@ -214,6 +262,11 @@
   "cve": "Kali Linux",
   "match": [
    "kali"
+  ],
+  "cpe": [
+   "kali:*",
+   "offensive_security:kali*",
+   "*:kali_linux"
   ]
  },
  "MobaXterm": {
@@ -223,6 +276,10 @@
   "cve": "MobaXterm",
   "match": [
    "mobaxterm"
+  ],
+  "cpe": [
+   "mobatek:*",
+   "*:mobaxterm"
   ]
  },
  "Git for windows": {
@@ -234,6 +291,12 @@
   "match": [
    "git for windows",
    "git 2."
+  ],
+  "cpe": [
+   "git_for_windows*:*",
+   "gitforwindows:*",
+   "*:git_for_windows",
+   "git-scm:git"
   ]
  },
  "Proxmox": {
@@ -243,6 +306,9 @@
   "cve": "Proxmox",
   "match": [
    "proxmox"
+  ],
+  "cpe": [
+   "proxmox:*"
   ]
  },
  "HyperV": {
@@ -253,6 +319,10 @@
   "match": [
    "hyper v",
    "hyperv"
+  ],
+  "cpe": [
+   "microsoft:windows*",
+   "microsoft:hyper-v*"
   ]
  },
  "Pfsens": {
@@ -262,6 +332,11 @@
   "cve": "pfSense",
   "match": [
    "pfsense"
+  ],
+  "cpe": [
+   "netgate:*",
+   "pfsense:*",
+   "*:pfsense*"
   ]
  },
  "Wireguard": {
@@ -271,6 +346,10 @@
   "cve": "WireGuard",
   "match": [
    "wireguard"
+  ],
+  "cpe": [
+   "wireguard:*",
+   "*:wireguard*"
   ]
  },
  "Wg-Easy": {
@@ -280,6 +359,10 @@
   "cve": "wg-easy",
   "match": [
    "wg easy"
+  ],
+  "cpe": [
+   "wg-easy*:*",
+   "*:wg-easy"
   ]
  },
  "Pi Hole": {
@@ -291,6 +374,11 @@
   "match": [
    "pi hole",
    "pihole"
+  ],
+  "cpe": [
+   "pi-hole:*",
+   "*:pi-hole",
+   "*:pihole"
   ]
  },
  "Headscale": {
@@ -300,6 +388,11 @@
   "cve": "Headscale",
   "match": [
    "headscale"
+  ],
+  "cpe": [
+   "juanfont:*",
+   "headscale*:*",
+   "*:headscale"
   ]
  },
  "TailScale": {
@@ -313,6 +406,9 @@
   "cve": "Tailscale",
   "match": [
    "tailscale"
+  ],
+  "cpe": [
+   "tailscale:*"
   ]
  },
  "Virtualbox": {
@@ -322,6 +418,10 @@
   "cve": "VirtualBox",
   "match": [
    "virtualbox"
+  ],
+  "cpe": [
+   "oracle:vm_virtualbox",
+   "oracle:virtualbox"
   ]
  },
  "Brave": {
@@ -335,6 +435,11 @@
   ],
   "exclure": [
    "\\bbrave (new world|frontier)\\b"
+  ],
+  "cpe": [
+   "brave:*",
+   "*:brave_browser",
+   "*:brave"
   ]
  },
  "Mullvad": {
@@ -348,6 +453,10 @@
   "cve": "Mullvad",
   "match": [
    "mullvad"
+  ],
+  "cpe": [
+   "mullvad:*",
+   "*:mullvad*"
   ]
  }
 }

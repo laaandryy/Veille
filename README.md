@@ -5,7 +5,7 @@ Site vitrine (`index.html`) mis à jour chaque jour par la tâche planifiée **v
 
 ## Fonctionnement
 
-1. Chaque jour à 05:00 UTC, le workflow lit `technologies.csv`.
+1. Chaque jour à 04:17 UTC (avec un passage de rattrapage à 09:43 UTC), le workflow lit `technologies.csv`.
 2. Pour chaque technologie, `scripts/veille.py` collecte :
    - la dernière version publiée (GitHub Releases ; kernel.org pour le noyau) ;
    - les billets récents des flux officiels (RSS/Atom) ;
@@ -35,9 +35,18 @@ dans le titre, et les filtres globaux de `_filtres` dans `scripts/sources.json`
 python3 scripts/veille.py   # Python 3.10+, aucune dépendance
 ```
 
+## Version installée
+
+La 3e colonne de `technologies.csv` (« Version installée ») est facultative. Renseignée, elle permet
+d'afficher sur la carte « ✓ À jour » ou « Mise à jour → x.y.z » (comparaison avec la dernière release ;
+pour le noyau, dans la même branche, ex. 6.1.x) et de signaler les CVE dont la plage vulnérable
+contient ta version. Exemple : `Ollama;;0.12.3`.
+
 ## Failles (CVE)
 
 L'onglet **Failles CVE** liste, pour chaque technologie, les 5 CVE les plus récentes publiées sur
-30 jours dans la base [NVD](https://nvd.nist.gov) (recherche de l'expression `cve` de `sources.json`
-dans la description). Sans clé, la NVD limite le débit (≈ 3 min de collecte). Facultatif : créer
+30 jours dans la base [NVD](https://nvd.nist.gov) : recherche de l'expression `cve` de `sources.json`
+dans la description, puis vérification des identifiants CPE (motifs `cpe` de `sources.json`). Une CVE
+déjà analysée qui vise un autre produit est écartée ; une CVE pas encore analysée par la NVD est
+marquée « À confirmer ». Les CVE touchant ta version installée sont affichées en priorité. Sans clé, la NVD limite le débit (≈ 3 min de collecte). Facultatif : créer
 un secret `NVD_API_KEY` (clé gratuite sur nvd.nist.gov) pour accélérer.

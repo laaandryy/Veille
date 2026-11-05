@@ -4,7 +4,10 @@ name: veille
 # technologie de technologies.csv, puis régénère index.html et le pousse sur main.
 on:
   schedule:
-    - cron: "0 5 * * *"        # tous les jours à 05:00 UTC (6 h/7 h à Paris)
+    # GitHub retarde ou saute parfois les tâches calées sur l'heure pile :
+    # horaire décalé + second passage de rattrapage en fin de matinée.
+    - cron: "17 4 * * *"       # 04:17 UTC (5 h 17 / 6 h 17 à Paris)
+    - cron: "43 9 * * *"       # 09:43 UTC, rattrapage
   workflow_dispatch: {}         # lancement manuel depuis l'onglet Actions
   push:
     branches: [main]
