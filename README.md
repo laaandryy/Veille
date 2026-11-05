@@ -43,7 +43,7 @@ pour le noyau, dans la même branche, ex. 6.1.x) et de signaler les CVE dont la 
 contient ta version. Exemple : `Ollama;;0.12.3`.
 
 Pour les produits suivis sur [endoflife.date](https://endoflife.date) (clé `eol` de `sources.json` :
-noyau Linux, Debian, Ubuntu, Alpine, Docker Engine, Proxmox VE, pfSense, VirtualBox), la carte indique
+noyau Linux, Debian, Ubuntu, Alpine, Docker Engine, Proxmox VE, VirtualBox), la carte indique
 aussi la branche de ta version et sa date de fin de support (⚠ si elle n'est plus supportée), et la
 mise à jour est comparée à la dernière version de cette branche.
 

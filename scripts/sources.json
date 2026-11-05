@@ -344,8 +344,7 @@
    "netgate:*",
    "pfsense:*",
    "*:pfsense*"
-  ],
-  "eol": "pfsense"
+  ]
  },
  "Wireguard": {
   "category": "Réseau & sécurité",
