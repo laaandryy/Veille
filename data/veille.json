@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-05T09:15:05Z",
+ "generated_at": "2026-11-05T17:37:44Z",
  "results": [
   {
    "name": "Discord",
@@ -12,6 +12,15 @@
    "repo_meta": null,
    "releases": [],
    "news": [
+    {
+     "title": "Discord abandonne Electron et confirme l'app en Rust, 290 Mo de mémoire",
+     "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxQaHU2UHRmRlFiLTZmMkpnQXhLdTQtejlKTVU1akJ2bXpXSXZTWHI5OHRETlo3dk44VnJSQVlvTGJnbXppUGF1ekZKaTZqN3BEaXB5Wk56V2FjRjFFcXpCVXlVblZDb3N3WW5NMERFcno5SHVsQVcxOWxWSzBRQmVKRmUwajFKSTBoaDBJ?oc=5",
+     "date": "2026-11-05T15:57:39Z",
+     "source": "Pasquale Pillitteri",
+     "summary": "",
+     "lang": "fr",
+     "new": true
+    },
     {
      "title": "Gardez le contact sur World of Warcraft avec Discord",
      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNcUdBc3dqRWx3ckxkMXBNWkJna2ttclUtYXVnd25lQzY5R3RXOVVrQ2lCOUtzMFBPWVVhZWJJQURpQjZWRXcxTndxdzZudnZxOTlkYi16UUhsOFBsRG5IaU14YVZYU0JHOHpibWNWY3J5Mlltd3d5azdYNDd5LVhULTJGWEl2Q29qQmxIN3lPMW50OEpTYldVZHhZc0RlR241MWJz?oc=5",
@@ -40,31 +49,22 @@
      "new": false
     },
     {
-     "title": "Vos messages Discord pourraient apparaître sur Google",
-     "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOLU05bTBPbXN4cVUxblZnRFNfbmdCZ3ZLRVF4d29UMWE1cGRvRUtuRUswM2ZZRzBnZHUyQ2VmcFFrNXA3MTRTNGxVc3BBaF9vcW5xS01FUzhJOGNlNEF5UjF3YWpNQm5UM1Z3M054anl4WUFMN2hzSjhzVVF1Zmd1cmxXcVdNVTlLS0xyMllQRWJUQzE3YlJwUg?oc=5",
-     "date": "2026-10-28T14:09:16Z",
-     "source": "Pèse sur start",
-     "summary": "",
-     "lang": "fr",
-     "new": false
-    },
-    {
      "title": "Discord : les messages des grands serveurs publics seront indexés par Google dès décembre",
      "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQc0VlOEVVQW1Yanh5Y2ZnbzFZYTIzVjB2bi1OUjByVXQ2cURMSWY4ZWh3MDhadGxLVnFsTXEtX0pjX3dDWTV6ZUJ6M01QYUJ4anM3dUFhdTZRbGhHajh2ZFNWM1BIRldVZVdHZkRzekd2VTBkNGFPdHl4UC1wRW5pdFZwV29fMDhnRWlabGFfQ1NZTEdVODRYUWE3UzNpV3VobjJiMll4OUdtSFFWSDJiNWVtR2VUSjc5ZTBvMWFiQk05R2pkZ2g1VFBn?oc=5",
-     "date": "2026-10-28T06:01:14Z",
+     "date": "2026-10-28T07:00:00Z",
      "source": "ZDNET",
      "summary": "",
      "lang": "fr",
      "new": false
     },
     {
-     "title": "Au Népal, une première ministre choisie sur Discord",
-     "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxNVWJzUTlHd0FuT3JzbXFpZWJyVzlzVkRsZWZBOGg4ZzVlb1VZZXh3ZURfcFgyYU9hbDdCaGNPOUFxQjhFc1VPaVZaVWM0VFkyTmFKNWdOdGlxYTRfdGZUcVdKQzhIaThNTGJjTkJqbk5zQnVTMGEwSGM3VHRoTzNIMDlJOS1DaVpxMTdiZldLRQ?oc=5",
-     "date": "2026-10-27T07:00:00Z",
-     "source": "Radio-Canada",
+     "title": "Vos messages Discord pourraient apparaître sur Google",
+     "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNazVmS25EZDZVV3FMZ1NmajhReUZCWUk5Y0hDa2RkdFU1Q1d0TDdNZWRvSXdWSTZkLTdvMjlxV3dKYVpnZ3pueWEzLU1jam96a3F6eGJGYUh0RWw4Y29GcXFGUVJiNjVrZGtTZGN1MTJhNm9nekhRc21kR0tnU0dRNEswMDhsamVUQUZqSmh3YV9iZw?oc=5",
+     "date": "2026-10-28T07:00:00Z",
+     "source": "24 heures",
      "summary": "",
      "lang": "fr",
-     "new": false
+     "new": true
     }
    ],
    "news_count": 14,
@@ -74,7 +74,7 @@
      "url": "https://discord.com/blog"
     }
    ],
-   "new_count": 1,
+   "new_count": 3,
    "cves": [],
    "cve_total": 0,
    "cves_affecting": 0,
@@ -90,8 +90,8 @@
    "category": "Productivité",
    "repo": "obsidianmd/obsidian-releases",
    "repo_meta": {
-    "stars": 22937,
-    "pushed": "2026-11-05T08:24:43Z",
+    "stars": 22960,
+    "pushed": "2026-11-05T17:20:25Z",
     "url": "https://github.com/obsidianmd/obsidian-releases",
     "description": "Community plugins list, theme list, and releases of Obsidian."
    },
@@ -257,7 +257,7 @@
    "category": "Outils",
    "repo": "Regncreative/PulseDiagnostics",
    "repo_meta": {
-    "stars": 836,
+    "stars": 838,
     "pushed": "2026-10-28T07:57:30Z",
     "url": "https://github.com/Regncreative/PulseDiagnostics",
     "description": "Read-only Windows diagnostics: the Event Log in plain language, blue screens explained. Offline and open source."
@@ -366,8 +366,8 @@
    "category": "IA locale",
    "repo": "ollama/ollama",
    "repo_meta": {
-    "stars": 185966,
-    "pushed": "2026-11-05T01:32:18Z",
+    "stars": 186013,
+    "pushed": "2026-11-05T17:22:54Z",
     "url": "https://github.com/ollama/ollama",
     "description": "Get up and running with Kimi, GLM, MiniMax, DeepSeek, gpt-oss, Qwen, Gemma and other models."
    },
@@ -487,8 +487,8 @@
    "category": "IA locale",
    "repo": "langflow-ai/langflow",
    "repo_meta": {
-    "stars": 156346,
-    "pushed": "2026-11-05T03:56:37Z",
+    "stars": 156360,
+    "pushed": "2026-11-05T17:36:00Z",
     "url": "https://github.com/langflow-ai/langflow",
     "description": "Langflow is a powerful tool for building and deploying AI-powered agents and workflows."
    },
@@ -645,8 +645,8 @@
    "category": "Conteneurs",
    "repo": "moby/moby",
    "repo_meta": {
-    "stars": 72242,
-    "pushed": "2026-11-05T00:49:03Z",
+    "stars": 72254,
+    "pushed": "2026-11-05T16:20:03Z",
     "url": "https://github.com/moby/moby",
     "description": "The Moby Project - a collaborative project for the container ecosystem to assemble container-based systems"
    },
@@ -675,20 +675,20 @@
    ],
    "news": [
     {
+     "title": "Docker + ActiveState Extending Secure Defaults to the Packages Developers Install",
+     "url": "https://www.docker.com/blog/docker-activestate-trusted-content/",
+     "date": "2026-11-05T15:28:22Z",
+     "source": "docker.com",
+     "summary": "Docker partners with ActiveState to continue to provide one standard for trusted content across everything you and your teams build on.",
+     "official": true,
+     "new": true
+    },
+    {
      "title": "The Ecosystem is the Answer: Docker, the Blueprint Alliance, and the Importance of Collaboration in the Agentic Era",
      "url": "https://www.docker.com/blog/docker-blueprint-alliance-agent-baseline/",
      "date": "2026-11-02T14:00:00Z",
      "source": "docker.com",
      "summary": "Docker is a founding member of the Blueprint Alliance, a 12-company reference architecture for securing AI agents, built around four governance questions.",
-     "official": true,
-     "new": false
-    },
-    {
-     "title": "Where should your code live in a Docker Sandbox?",
-     "url": "https://www.docker.com/blog/docker-sandbox-code-checkout-workflows/",
-     "date": "2026-11-02T14:00:00Z",
-     "source": "docker.com",
-     "summary": "Docker Sandboxes support three ways to organize an agent’s code: shared mounts, Git worktrees, and clone mode. Here’s how to choose between them.",
      "official": true,
      "new": false
     },
@@ -729,7 +729,7 @@
      "new": true
     }
    ],
-   "news_count": 14,
+   "news_count": 13,
    "links": [
     {
      "label": "Site officiel",
@@ -740,7 +740,7 @@
      "url": "https://github.com/moby/moby"
     }
    ],
-   "new_count": 1,
+   "new_count": 2,
    "cves": [
     {
      "status": "cna",
@@ -800,7 +800,7 @@
      "score": 7.4,
      "exploited": false,
      "summary": "Improper Certificate Validation (CWE-295) in the operating system certificate bundle shipped in the Docker images of APM Server; Auditbeat, Filebeat, Heartbeat, Metricbeat and Packetbeat; Elastic Agent, including Fleet Server and Cloudbeat; Logstash, for TLS…",
-     "new": true
+     "new": false
     }
    ],
    "cve_total": 17,
@@ -846,6 +846,24 @@
    ],
    "news": [
     {
+     "title": "OpenAI says its pipeline found 948 Linux kernel privilege-escalation flaws",
+     "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5Fb0N6bW1YbmhPWFJHc0VtaHp6Z1p3X3pZREVTXzlVZGphS2NIQnlOSmd2WmwxNFd4S2h0UDIwSUVlX0laa3ZybGlrdjkyb29ma25ud214X0pjOHpXbWpKQldJaXpoU3dHc0ZOTVM0MGlPMGcxeXo5dUNmcURNVkE?oc=5",
+     "date": "2026-11-05T15:53:16Z",
+     "source": "Mezha.net",
+     "summary": "",
+     "lang": "en",
+     "new": true
+    },
+    {
+     "title": "OpenAI Finds 948 Local Privilege Escalation Bugs In The Linux Kernel",
+     "url": "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBzZDItTWpNbG1fWjlOOVF0R3hRenNWSkltS3Fvc3VyWjNPTjQ3dzlreG1BODF6NnRZOXBZVVZFTnlwV0lGcTZvSzRzalZLV1BPM3lEYzBGUVoyem5PdFktbjNIMEVOQQ?oc=5",
+     "date": "2026-11-05T10:00:00Z",
+     "source": "Phoronix",
+     "summary": "",
+     "lang": "en",
+     "new": true
+    },
+    {
      "title": "OpenAI balaie le noyau Linux, trouve 948 failles et pousse les DSI vers l’isolement des charges",
      "url": "https://news.google.com/rss/articles/CBMi6AFBVV95cUxQNlFSQU95SzN0NjZROXFfcHFIRUpGbXRxRWd4UzRMZUMzRUFEdTQ0ZkxmTlRGTWN2b0VDUUdVUFhlS2VGWjFST1k0MGFLWjA5QXFQdndDTWxJNk1KcW9ocTBuRkxSWXE0YUk0RURjaF9ZRGljRHlweTljNVROa2xNZE4zVHVWenhZN0Rwd05Ha1l0NkJUZ3dqN18xRWtMQnRYNmM1RzZ2WmFHNkxFaHhQeWFhT3BzM1lRTEpKRW1uRkVXU2E5WmxfM2doU0xubVpqc2h2RG1pTmx0QTB0dkxGeXZwMGFnYzlt?oc=5",
      "date": "2026-11-05T07:55:52Z",
@@ -880,27 +898,9 @@
      "summary": "",
      "lang": "en",
      "new": true
-    },
-    {
-     "title": "OpenAI Pipeline Finds 948 Linux Kernel Privilege Escalation Flaws",
-     "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxOMVRfS1U2blpYMkFoZ2Qxb0JvZlhoY1cxenJVTTB1MElpZzFOZ043Z252ZEhqTkZwTDV6YmdLOXpveHlVSnFjdUF5M2wzLTFNblhpNXQ5QlpZYS0zNVlvdVprR0h5RTNJck9CdGlEWXloNVRDOFhwUVEtNlBYcTE0QnRKcTZ3MTBfT0lhRDZmbWQ?oc=5",
-     "date": "2026-11-05T00:15:04Z",
-     "source": "Unite.AI",
-     "summary": "",
-     "lang": "en",
-     "new": true
-    },
-    {
-     "title": "Le Pipeline d'OpenAI Identifie les Vulnérabilités du Noyau Linux 948",
-     "url": "https://news.google.com/rss/articles/CBMihgFBVV95cUxPUVBma2t6TXJBQUxsMkZwZlQ2dnpCZ3ZpbDU2aGFXMkhFV2hrSFVNWEhsODFoTERjUll6Y2k3Um1QRXUtdVpiT1RzcHUtVkNNWkY1aGpvaUhpeHU2YTNFNzlIbGRILUZvY3FaWlI1Z3MzcXA1UENVNzZvZlhvRUdtVm9MeWQ0dw?oc=5",
-     "date": "2026-11-04T22:46:37Z",
-     "source": "blockchain.news",
-     "summary": "",
-     "lang": "fr",
-     "new": true
     }
    ],
-   "news_count": 75,
+   "news_count": 74,
    "links": [
     {
      "label": "Site officiel",
@@ -919,7 +919,7 @@
      "score": 8.1,
      "exploited": false,
      "summary": "In the Linux kernel, the following vulnerability has been resolved: tcp: Fix potential UAF in reqsk_timer_handler(). When TCP socket migration fails at inet_ehash_insert() in reqsk_timer_handler(), we jump to the no_ownership: label and free the new reqsk…",
-     "new": true
+     "new": false
     },
     {
      "status": "cna",
@@ -931,7 +931,7 @@
      "score": 7.8,
      "exploited": false,
      "summary": "In the Linux kernel, the following vulnerability has been resolved: sched_ext: Wait for SCX_OPSS_DISPATCHING before moving tasks off DSQs A task can be found on a non-local DSQ while the CPU which dispatched it is still running ops.dequeue() and hasn't…",
-     "new": true
+     "new": false
     },
     {
      "status": "cna",
@@ -943,7 +943,7 @@
      "score": null,
      "exploited": false,
      "summary": "In the Linux kernel, the following vulnerability has been resolved: drm/amdgpu: correct reservation fence slots for userq per-vm BOs eviction It fixes both the move overflow and the eviction fence add for evicting these per-vm BOs.",
-     "new": true
+     "new": false
     },
     {
      "status": "cna",
@@ -955,7 +955,7 @@
      "score": null,
      "exploited": false,
      "summary": "In the Linux kernel, the following vulnerability has been resolved: io_uring/cancel: rearm local work wake up before sleep io_uring_try_cancel_requests() sets ->cq_wait_nr to 1 so that the next io_req_local_work_add() wakes the cancelling task. The add that…",
-     "new": true
+     "new": false
     },
     {
      "status": "cna",
@@ -967,12 +967,12 @@
      "score": null,
      "exploited": false,
      "summary": "In the Linux kernel, the following vulnerability has been resolved: io_uring: don't flood a cancelling task with task_work io_ring_exit_work() asks each task which has used the ring to remove its tctx node, by task_work, and repeats that until the list is…",
-     "new": true
+     "new": false
     }
    ],
-   "cve_total": 1097,
+   "cve_total": 890,
    "cves_affecting": 0,
-   "cves_pending": 947,
+   "cves_pending": 740,
    "cves_cna": 150
   },
   {
@@ -1044,23 +1044,23 @@
      "new": true
     },
     {
-     "title": "Mysterium VPN Launches Linux Command-Line Client for Ubuntu and Debian",
-     "url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxQR1lnaEhOUE03M3A5VDNzSUJCRC04WGtydjZkTnBUN2FxOVE2Q3JITE1WeFBrdVE5SFMtdm1VclZqZFpVdFBsVWtqTVJFYUptNG5SQjNtTUZ1TWlsQm9iRUs2UzA0NFdCeGtET2tsNHY3aFV0Nmx2ZU85UTdoa19MaE9TaW96UVNZeHRPNkswNHl6Tm9kbFFpdzRiV1VybjNwY3hJTDhWdF9jY1RocVo1cm9fLURkUDd4MkN6V05hRkNRUnhWRlpWdG9FQ2dmakQxZFk4?oc=5",
-     "date": "2026-10-30T17:58:00Z",
-     "source": "FinancialContent",
+     "title": "Debian's APT Affected By Man-In-The-Middle Attack For Arbitrary Code Execution As Root",
+     "url": "https://news.google.com/rss/articles/CBMiXkFVX3lxTFBUUTdtZjg5cndXZUdNYzdxang4WTBOd0dINUhmdkxySDRESXZNR0VKbEdBMEFKc2RETjEyUC1MaVV5WldUQ1pGSWdrQkY1ZVRoSEI3UFVYeHhhNnZTYmc?oc=5",
+     "date": "2026-11-04T13:10:00Z",
+     "source": "Phoronix",
      "summary": "",
      "lang": "en",
-     "new": false
+     "new": true
     }
    ],
-   "news_count": 15,
+   "news_count": 16,
    "links": [
     {
      "label": "Site officiel",
      "url": "https://www.debian.org/News/"
     }
    ],
-   "new_count": 6,
+   "new_count": 7,
    "cves": [
     {
      "status": "cna",
@@ -1104,6 +1104,24 @@
    ],
    "news": [
     {
+     "title": "Ubuntu Pro is now available on AWS Deep Learning Amazon Machine Images (DLAMI)",
+     "url": "https://ubuntu.com//blog/ubuntu-pro-available-on-dlami",
+     "date": "2026-11-05T13:53:49Z",
+     "source": "ubuntu.com",
+     "summary": "In September 2026, Amazon Web Services (AWS) published its first DLAMIs built on Ubuntu Pro in the Base GPU family. By choosing Ubuntu Pro, enterprises launching DLAMIs gain a stronger security maintenance posture at…",
+     "official": true,
+     "new": true
+    },
+    {
+     "title": "Debian and Ubuntu Patch APT Flaw That Hands Attackers Root",
+     "url": "https://news.google.com/rss/articles/CBMieEFVX3lxTE1LNmRUNjBISUdidV9oVi1tSDBhSmRQRS1URXRfQ1YwQnViQTVwNi1qdVMydlpMbkR3Rk04NW9wY0pJNEEzVnB5WXR5a0dnUElZNTh1OHFnby1XN0FQVFBoTEdNWnFlWXczTGc5YUxMVDhlZkI0Rm1SSA?oc=5",
+     "date": "2026-11-05T12:30:38Z",
+     "source": "SQ Magazine",
+     "summary": "",
+     "lang": "en",
+     "new": true
+    },
+    {
      "title": "APT bug CVE-2026-109518 hits Debian and Ubuntu, a fake package can get root",
      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQY1A0ZVFRcWtSU1R2NFM0WlEzOHJnNVdLeDZFaDB0bWZBTGxYSGh5cnpRcnc0bXY5aHlGaFVfU09vRkhja2FWc2x0eXA4VG5jeE9IckNsSzRKUDRaUDZ6c3Rha0dYVW85R2xTc1ZURXJRaktJZ2VyRkdKNEg0eDQxckIxMTFyZkNRSlNqaWJxSnZsVFJRdGtyajJtejA2d3g1?oc=5",
      "date": "2026-11-05T06:36:41Z",
@@ -1138,34 +1156,16 @@
      "summary": "Fixes are available in Ubuntu for the CVE-2026-109518 vulnerability affecting APT.",
      "official": true,
      "new": true
-    },
-    {
-     "title": "Debian and Ubuntu APT Flaw Lets Hackers Hijack Software Updates and Execute Code as Root",
-     "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBaM2lPWGpjM1M3Q0NsQ25ZaHB5eVR2R2U3RVJXeFBReXpLOWtXa19Lb05GeTdSZk9naHAzZEJjb0JuZ1ZLV1J5R1RERWp1NGhUSDdlSURsbjQ1REZaNDV4ak5Ed3JpTEZWNnJDQl9wR29makQ2UUxuVWZ6WjJ6NGPSAYQBQVVfeXFMT0tPb2YxV0JZazZQTXQtQXBYVFpxSGhaUHZRVWlmOU90MXB5bWR6TWJhc0p4dkQyRlBnQmo0Nlp5MGZBMHpvYWY2ZURDSFAyUTdJVkNOWnlBWmFNeWtqV3hiTmg5Ui1SVmlCc0NkalhmNXhoWmFrVlBFY0FZR3VTQUg2eUli?oc=5",
-     "date": "2026-11-04T17:06:35Z",
-     "source": "CyberSecurityNews",
-     "summary": "",
-     "lang": "en",
-     "new": true
-    },
-    {
-     "title": "Never lose robot data again: automatic ROS 2 bag recording and upload",
-     "url": "https://ubuntu.com//blog/never-lose-robot-data-again-automatic-ros-2-bag-recording-and-upload",
-     "date": "2026-11-03T16:02:04Z",
-     "source": "ubuntu.com",
-     "summary": "If you work with robots, perhaps you’ve come up against a common, but annoying situation: the one field run that mattered is the one nobody recorded. Or it was recorded but the ROS 2 bag (a recording of ROS 2 topics)…",
-     "official": true,
-     "new": false
     }
    ],
-   "news_count": 60,
+   "news_count": 61,
    "links": [
     {
      "label": "Site officiel",
      "url": "https://ubuntu.com/blog"
     }
    ],
-   "new_count": 6,
+   "new_count": 7,
    "cves": [],
    "cve_total": 0,
    "cves_affecting": 0,
@@ -1196,6 +1196,51 @@
    ],
    "news": [
     {
+     "title": "OpenSSH Alpine Bug Lets a Long Password Unlock Locked Accounts",
+     "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPdVRNb3RvT2FYdjkzbGYwbXhPQ29WY2NHWUJPa2I1U1ZRVUVaN3BwdUoyc0ZGbFFsQTBDYnJ0UnpmVmt2bVdKYnVvUUJTeFRsU19XMW9FQlpBV1NOdXNhXzdhTDRHUUdWYXJPVGRVYWJPaEgwazBlX183cUhBcEJ3YU53OUF4VGZiQmtkV2ZYenRSOGI0V3BwNUN2Z1dyVFhxWkE?oc=5",
+     "date": "2026-11-05T15:47:34Z",
+     "source": "Pasquale Pillitteri",
+     "summary": "",
+     "lang": "en",
+     "new": true
+    },
+    {
+     "title": "OpenSSH Issues Emergency Fix for Flaw Letting Long Passwords Bypass SSH Auth on Alpine Linux",
+     "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxQaGZIVGMxLVBKb1NRaGNvbmxHTXFVa3phVkZLWWtzQ3RqNHFuRmEtbnJLaUlaX2YxcXA2dWE2WGk2MWQtUXJiQ09iR2FWeGJ3c2ZZYUJjR1hYVFRvb3FDNnV0ZUJDNUZQVGZDYjBicXpRbVRscmQ5M2pyZ0FERWYycmZn?oc=5",
+     "date": "2026-11-05T15:30:00Z",
+     "source": "The Hacker News",
+     "summary": "",
+     "lang": "en",
+     "new": true
+    },
+    {
+     "title": "OpenSSH Flaw Could Let Attackers Bypass Password Authentication on Alpine Linux Servers",
+     "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTFBhamhlMXFfRkVyRExCQWNsa0dsMS1relJxdjNFQUlvUm9HdnNqS1hsWWZJVThhSlFfb3JNNmNSVzZFZVZ4NUhTckRLLU5pSUI5ajQ4Y240akxxRmlGLVIwWk1GS2VBSzY3SVBnbHRRX0RrOTFiNUlPYUNQRGF6MTjSAYQBQVVfeXFMTkEyV3ZYMHUxZGp0SW05cmptTlBrVi1MR0xBU0xBU08xaWpyd2dxVzdIXzUtNXFGQnFtU2dMR0l2WnZ0bC04RGRJVDJESUx4LVlrU0U5MkFvRFdFY3hQcjNvSG5kZUxvSWJZa0lPQmhndXVMRmxZUUdhMVhwV2lIYjRuU216?oc=5",
+     "date": "2026-11-05T14:58:40Z",
+     "source": "CyberSecurityNews",
+     "summary": "",
+     "lang": "en",
+     "new": true
+    },
+    {
+     "title": "Security advisory: openssh-server password authentication bypass",
+     "url": "https://alpinelinux.org/posts/2026-11-05-openssh-password-authentication-bypass/",
+     "date": "2026-11-05T00:00:00Z",
+     "source": "alpinelinux.org",
+     "summary": "Security advisory: openssh-server password authentication bypass",
+     "official": true,
+     "new": true
+    },
+    {
+     "title": "Alpine 3.21.10, 3.22.8, 3.23.8 and 3.24.4 released",
+     "url": "https://alpinelinux.org/posts/alpine-3.21.10-3.22.8-3.23.8-3.24.4-released/",
+     "date": "2026-11-05T00:00:00Z",
+     "source": "alpinelinux.org",
+     "summary": "Alpine 3.21.10, 3.22.8, 3.23.8 and 3.24.4 released",
+     "official": true,
+     "new": true
+    },
+    {
      "title": "AlpineBSD : noyau NetBSD et espace utilisateur Alpine sans code d'IA",
      "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQYUl3bXhMYm5JT2Nzb0FqUjVSVlFob0IwRWMxN1B3dFYzT0dJWW5iNjNoSFdYV1dpcUo0SHFVdUs4blFZWEk1U19Ba2hsS1VjNGhUaGdRVVE3a0k1UkVON1pnZVI3UDlyY1pnSVhhT04wWHZEaWk2ampJdDhoaEJSanZQWFFRa1prcWpYTC0tUGU4RFh0WS1rR0FYVFpIeTJNNEZTb3VmYUtMSWRCS01N?oc=5",
      "date": "2026-11-02T19:27:04Z",
@@ -1203,61 +1248,16 @@
      "summary": "",
      "lang": "fr",
      "new": false
-    },
-    {
-     "title": "Alpine Linux rebuilds GitLab instance following exploit attempts",
-     "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxPUXltaFRvQ1JQSTdKYVJieENobEZsVzZlNjN1djhjOFRlVXZXTFllR3dkUmtxdGxSMXlFZzh1TWQ1RGtrbFFpWDR1bVBCXzBIcnZaamxoVXpvMU94RXV6ZElmbExaYTBXV3NsZ3VSMUNDcFc4MV9UcEcxSEYxbm5yZEotaGNOVjNELWQybC1wd2JiOENPRUVUMHNn?oc=5",
-     "date": "2026-11-02T13:32:43Z",
-     "source": "SC Media",
-     "summary": "",
-     "lang": "en",
-     "new": false
-    },
-    {
-     "title": "Alpine Linux reconstruit son serveur GitLab après une cyberattaque",
-     "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQMFJxZXlsNmpZV3RETi1LOEhMc1IyREVwWUZtNjVfN1M4a2VaaE1Jbzh5VG1KQjluSC1pbmpUcHdWRjRGamxPRVA2cjVyQ1phb1BlVGN4V1JGY21vajc1SjR0aDdBdDlXaVVvRjVnbkJqdE1ReGFRNy1LdzNTQ193dDJVNTg0bDQ?oc=5",
-     "date": "2026-11-02T07:16:28Z",
-     "source": "Linformatique.org",
-     "summary": "",
-     "lang": "fr",
-     "new": false
-    },
-    {
-     "title": "Alpine Linux rebuilds GitLab after attempted RCE attack",
-     "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQRWxjMFBsMlA0NUVDcGkzR0tTZFJ6aXpnM3JKMTg4SktIa013UnR6cE5kLVlkVmpqMEpVa2IyRG9NdUtnOWdXSi1hSG91WUxpSUFGVTg4RzE4andobmRpVGlWUldkLXZ2amxka0JfN0tpNFZMZUlkRmthcnhZMUxIV1VHWFJ0NGc?oc=5",
-     "date": "2026-11-01T15:49:12Z",
-     "source": "Mezha.net",
-     "summary": "",
-     "lang": "en",
-     "new": false
-    },
-    {
-     "title": "GitLab is back: what you need to do",
-     "url": "https://alpinelinux.org/posts/gitlab-reopened-after-security-incident/",
-     "date": "2026-10-30T00:00:00Z",
-     "source": "alpinelinux.org",
-     "summary": "GitLab is back: what you need to do",
-     "official": true,
-     "new": false
-    },
-    {
-     "title": "GitLab security incident: attempted exploitation of CVE-2026-97229",
-     "url": "https://alpinelinux.org/posts/gitlab-security-incident-cve-2026-97229/",
-     "date": "2026-10-28T00:00:00Z",
-     "source": "alpinelinux.org",
-     "summary": "GitLab security incident: attempted exploitation of CVE-2026-97229",
-     "official": true,
-     "new": false
     }
    ],
-   "news_count": 10,
+   "news_count": 14,
    "links": [
     {
      "label": "Site officiel",
      "url": "https://alpinelinux.org/posts/"
     }
    ],
-   "new_count": 1,
+   "new_count": 6,
    "cves": [],
    "cve_total": 0,
    "cves_affecting": 0,
@@ -1374,15 +1374,6 @@
      "new": false
     },
     {
-     "title": "Kali Linux 2026.3 : Linux 7.1 et génération d'images conteneurisées",
-     "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxPU2RTaE5Sd3I5MV9jTTB0clFna3BSdnFVSEs0ZERyd0k0LVVIZnNocVFSenkzMVZtS2F4MFUxWl91M1hQY1U5NU1JcE5kbDJOSjZnZU1DZGE0SEFaSl9FTC1GSll6OVFRaDlsQzh1dFhFSVhXLWxNUzFReGN3NVhVaQ?oc=5",
-     "date": "2026-10-27T06:11:30Z",
-     "source": "GoodTechInfo",
-     "summary": "",
-     "lang": "fr",
-     "new": false
-    },
-    {
      "title": "Kali Linux 2026.3 Released With New Security Tools, Easier Custom Builds and Expanded NetHunter Capabilities",
      "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxNaWRyYm9XREpad0hyUElkWDlBRVRjbU41c0oxNnNCUG9JLVUxazM3SkRIeDJMckhZUzE1WkpUN282ZU0xWWhmb2FjSGhSZUtvc2FIWjJIeXFkSmhJT2tWNzM2clp6bG8tWWt4WTFnUmREU2RjVF91dTlFTGdrZ1owd0dhSTMyemVpaERVQTdNSURzZw?oc=5",
      "date": "2026-10-26T21:30:13Z",
@@ -1392,10 +1383,19 @@
      "new": false
     },
     {
-     "title": "Kali Linux 2026.3 ships kernel 7.1.5, brings wardriving to the TicWatch Pro 3",
-     "url": "https://news.google.com/rss/articles/CBMiekFVX3lxTE9PLXJnQnVCZ2xzdlNSYlhHMWtMVGxoQ2FsWG9IaXdYR2JNd3UzeW1pWXcxZEZHb2FzU0M3aXI5d2JrTC1FMzN0QWtyRGFfeGlwZTNIR0U1Uk1lS0NwZHJRRlFCSzNqbWlEUTVLV19zNzZjMDZ3RGhCWEFB?oc=5",
-     "date": "2026-10-26T13:24:24Z",
-     "source": "Help Net Security",
+     "title": "Kali Linux 2026.3 Released with Linux 7.1, KDE Plasma 6.7, and New Tools",
+     "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOX3NzSlJBa1hZaDdXTGZUQUZPWGFod1I4UjM3LWhJNVk2cjJtUG5jY0lSVml0QWxOMnJDUXFzV1Q0Smd5cGxvSmpwUmlHVFBac1dwY0NTMHpybWlPUWxNUU9oTENfOUNRektDY3pha0d6QUdEcnhwRzZKdXdQLV9USzg5S09KRVVrd09Td3FmMzRMaERfZU1v?oc=5",
+     "date": "2026-10-26T08:48:05Z",
+     "source": "9to5Linux",
+     "summary": "",
+     "lang": "en",
+     "new": true
+    },
+    {
+     "title": "How Kali Linux's Zsh setup turned me into a terminal fan",
+     "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQQTVkRDBvems1ZzY3b05vaXhBeW00RDA3TTUxUkFJVjBnUjJRTGpEMWNzdmdKamRQYUlGWE9RanJpX09lN2R4ZTBPMFF3X0JDa0F6blpnQVU5am5BTjA5RktOU3h4ZFk3ZmV6LXplSlFOenNweFBfTjNMeFBTMkUzN1FZNjhnMTI1SXdGTktmR3VZOU1LNXc?oc=5",
+     "date": "2026-10-26T07:00:00Z",
+     "source": "How-To Geek",
      "summary": "",
      "lang": "en",
      "new": false
@@ -1410,14 +1410,14 @@
      "new": false
     }
    ],
-   "news_count": 11,
+   "news_count": 10,
    "links": [
     {
      "label": "Site officiel",
      "url": "https://www.kali.org/blog/"
     }
    ],
-   "new_count": 1,
+   "new_count": 2,
    "cves": [],
    "cve_total": 0,
    "cves_affecting": 0,
@@ -1596,7 +1596,7 @@
     {
      "title": "Tesco veut migrer de VMware vers Proxmox",
      "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE85Yy1UY193bE1uWVU2dW40QmhoVEZKUEZUOXZUX2xBWjRkbVFMSXJrVXJiZTltM1QyS1NYSGMwY2VERkhjbEZrWHZycDJ0cDlCOEJJVW02UE1qWmVnMXhoUUlUd0hNZm1ROVFvQzVUSElJZTNtekMyQTJXV2hQRnM?oc=5",
-     "date": "2026-10-27T07:10:20Z",
+     "date": "2026-10-27T07:00:00Z",
      "source": "ChannelNews",
      "summary": "",
      "lang": "fr",
@@ -1614,7 +1614,7 @@
     {
      "title": "Tesco replacing VMware with Proxmox in its stores and on the edge",
      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPU1ZtUzRNeW1CZHNkT0pZdDZObEl5U01FeTlJNDRlVVh5OTAzWUIxT21Bbm95VkxER3lWYnJCSTZSV05PU24tem5hQVZFSUttZ1puQjRHWkMxUjFrZE43bS1qSFJGczhqbVZ6NFZzQW9sNi15dGRqS3ppLUJabkZicjUxLWUxX1hqVkxVeUxEdXU5SmRNVTJfSzFFdGNkV0pxRUlxWXZBYzBPQTZ5UmpnREcxaHpXVTBXU3dyMGRiakZja3M0c1E?oc=5",
-     "date": "2026-10-26T05:24:02Z",
+     "date": "2026-10-26T07:00:00Z",
      "source": "The Register",
      "summary": "",
      "lang": "en",
@@ -1915,8 +1915,8 @@
    "category": "Réseau & sécurité",
    "repo": "wg-easy/wg-easy",
    "repo_meta": {
-    "stars": 27420,
-    "pushed": "2026-11-04T06:45:52Z",
+    "stars": 27422,
+    "pushed": "2026-11-05T14:45:59Z",
     "url": "https://github.com/wg-easy/wg-easy",
     "description": "The easiest way to run WireGuard VPN + Web-based Admin UI."
    },
@@ -1967,7 +1967,7 @@
    "category": "Réseau & sécurité",
    "repo": "pi-hole/docker-pi-hole",
    "repo_meta": {
-    "stars": 11745,
+    "stars": 11747,
     "pushed": "2026-11-04T10:11:53Z",
     "url": "https://github.com/pi-hole/docker-pi-hole",
     "description": "The official Pi-hole Docker image from pi-hole.net"
@@ -2106,8 +2106,8 @@
    "category": "Réseau & sécurité",
    "repo": "juanfont/headscale",
    "repo_meta": {
-    "stars": 45388,
-    "pushed": "2026-11-05T04:51:46Z",
+    "stars": 45400,
+    "pushed": "2026-11-05T16:23:54Z",
     "url": "https://github.com/juanfont/headscale",
     "description": "An open source, self-hosted implementation of the Tailscale control server"
    },
@@ -2158,8 +2158,8 @@
    "category": "Réseau & sécurité",
    "repo": "tailscale/tailscale",
    "repo_meta": {
-    "stars": 38667,
-    "pushed": "2026-11-05T08:35:20Z",
+    "stars": 38680,
+    "pushed": "2026-11-05T17:22:09Z",
     "url": "https://github.com/tailscale/tailscale",
     "description": "The easiest, most secure way to use WireGuard and 2FA."
    },
@@ -2187,6 +2187,15 @@
     }
    ],
    "news": [
+    {
+     "title": "100x more programmers",
+     "url": "https://tailscale.com/blog/100x-more-programmers",
+     "date": "2026-11-05T14:00:00Z",
+     "source": "tailscale.com",
+     "summary": "AI could create a billion new programmers. Let's make sure they stay in control.",
+     "official": true,
+     "new": true
+    },
     {
      "title": "Tailscale turned my Raspberry Pi into the travel router I actually wanted",
      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNa2lnaWxjenZxNW9YbmRwZk9pVkxUbjUtVVpkM0k1TU5OMGU2UkpuWGRwNzFkRk9HN2t2LV8xQm9jMW9wOTRKTkFNUXgtSkNGdmNOZ1lxbVljYUlhSUVEWF94TGZGUmZ1UTc4LVcwb0xUT2NZSkU5MXBVeEdEWURXVmhNX1JnZ0xiSUptTDZ0aWhDOEQ2Z2pJOV9QZ3REU3FTTVE?oc=5",
@@ -2231,18 +2240,9 @@
      "summary": "",
      "lang": "en",
      "new": false
-    },
-    {
-     "title": "Where Tailscale VPN ends and Tailscale PAM begins",
-     "url": "https://tailscale.com/blog/what-is-tailscale-pam",
-     "date": "2026-10-26T14:00:00Z",
-     "source": "tailscale.com",
-     "summary": "Tailscale VPN locks the door. PAM logs who makes it through.",
-     "official": true,
-     "new": false
     }
    ],
-   "news_count": 18,
+   "news_count": 15,
    "links": [
     {
      "label": "Site officiel",
@@ -2253,7 +2253,7 @@
      "url": "https://github.com/tailscale/tailscale"
     }
    ],
-   "new_count": 1,
+   "new_count": 2,
    "cves": [],
    "cve_total": 0,
    "cves_affecting": 0,
@@ -2367,31 +2367,31 @@
    "category": "Navigateurs & vie privée",
    "repo": "brave/brave-browser",
    "repo_meta": {
-    "stars": 24113,
-    "pushed": "2026-11-05T04:04:20Z",
+    "stars": 24115,
+    "pushed": "2026-11-05T17:00:27Z",
     "url": "https://github.com/brave/brave-browser",
     "description": "Brave browser for Android, iOS, Linux, macOS, Windows."
    },
    "releases": [
     {
+     "version": "Nightly v1.101.28 (Chromium 157.0.8103.39) \n\n",
+     "tag": "v1.101.28",
+     "date": "2026-11-05T13:49:06Z",
+     "url": "https://github.com/brave/brave-browser/releases/tag/v1.101.28",
+     "new": true
+    },
+    {
+     "version": "Nightly v1.101.27 (Chromium 157.0.8103.39) \n\n",
+     "tag": "v1.101.27",
+     "date": "2026-11-05T13:30:22Z",
+     "url": "https://github.com/brave/brave-browser/releases/tag/v1.101.27",
+     "new": true
+    },
+    {
      "version": "Nightly v1.101.26 (Chromium 157.0.8103.39) \n\n",
      "tag": "v1.101.26",
      "date": "2026-11-05T01:17:26Z",
      "url": "https://github.com/brave/brave-browser/releases/tag/v1.101.26",
-     "new": true
-    },
-    {
-     "version": "Beta v1.100.49 (Chromium 157.0.8103.39) \n\n",
-     "tag": "v1.100.49",
-     "date": "2026-11-05T05:17:15Z",
-     "url": "https://github.com/brave/brave-browser/releases/tag/v1.100.49",
-     "new": true
-    },
-    {
-     "version": "Nightly v1.101.25 (Chromium 157.0.8103.30) \n\n",
-     "tag": "v1.101.25",
-     "date": "2026-11-04T17:38:50Z",
-     "url": "https://github.com/brave/brave-browser/releases/tag/v1.101.25",
      "new": true
     }
    ],
@@ -2478,8 +2478,8 @@
    "category": "Navigateurs & vie privée",
    "repo": "mullvad/mullvadvpn-app",
    "repo_meta": {
-    "stars": 7742,
-    "pushed": "2026-11-05T08:54:35Z",
+    "stars": 7746,
+    "pushed": "2026-11-05T16:31:15Z",
     "url": "https://github.com/mullvad/mullvadvpn-app",
     "description": "The Mullvad VPN client app for desktop and mobile"
    },
@@ -2544,7 +2544,7 @@
   "cves_affecting": 0,
   "cves_critical": 26,
   "news": 93,
-  "new": 31,
+  "new": 43,
   "releases_week": 9
  },
  "history": {
@@ -2814,6 +2814,23 @@
   "https://news.google.com/rss/articles/CBMixgFBVV95cUxQd3lNYXJpbi1GamNtSHcyQ29KeDRkN3FZTUdtZWgxQjlSckx2RnpLSExlNXdFZUlYWDVLN05XNjc4UXdHU29Pamd3OVRud2l5RnpsOEVHSEdya1Job19GdTlzak9mR3Q5bHNnR1NVQzIwUGV6bERhenEzU2FzUDJnMzRCQXFJUmlQZGJ2QzZSV2p0MUstbXpmM0dxMVg4SDZUMXRfTUlnOXZrMWt4LUEwZjB5VmZybFRDVzRqWkJENF9KUWtkNWc?oc=5": "2026-11-05",
   "https://github.com/brave/brave-browser/releases/tag/v1.101.26": "2026-11-05",
   "https://github.com/brave/brave-browser/releases/tag/v1.100.49": "2026-11-05",
-  "https://github.com/brave/brave-browser/releases/tag/v1.101.25": "2026-11-05"
+  "https://github.com/brave/brave-browser/releases/tag/v1.101.25": "2026-11-05",
+  "https://news.google.com/rss/articles/CBMiiwFBVV95cUxQaHU2UHRmRlFiLTZmMkpnQXhLdTQtejlKTVU1akJ2bXpXSXZTWHI5OHRETlo3dk44VnJSQVlvTGJnbXppUGF1ekZKaTZqN3BEaXB5Wk56V2FjRjFFcXpCVXlVblZDb3N3WW5NMERFcno5SHVsQVcxOWxWSzBRQmVKRmUwajFKSTBoaDBJ?oc=5": "2026-11-05",
+  "https://news.google.com/rss/articles/CBMikgFBVV95cUxNazVmS25EZDZVV3FMZ1NmajhReUZCWUk5Y0hDa2RkdFU1Q1d0TDdNZWRvSXdWSTZkLTdvMjlxV3dKYVpnZ3pueWEzLU1jam96a3F6eGJGYUh0RWw4Y29GcXFGUVJiNjVrZGtTZGN1MTJhNm9nekhRc21kR0tnU0dRNEswMDhsamVUQUZqSmh3YV9iZw?oc=5": "2026-11-05",
+  "https://www.docker.com/blog/docker-activestate-trusted-content/": "2026-11-05",
+  "https://news.google.com/rss/articles/CBMif0FVX3lxTE5Fb0N6bW1YbmhPWFJHc0VtaHp6Z1p3X3pZREVTXzlVZGphS2NIQnlOSmd2WmwxNFd4S2h0UDIwSUVlX0laa3ZybGlrdjkyb29ma25ud214X0pjOHpXbWpKQldJaXpoU3dHc0ZOTVM0MGlPMGcxeXo5dUNmcURNVkE?oc=5": "2026-11-05",
+  "https://news.google.com/rss/articles/CBMiZkFVX3lxTFBzZDItTWpNbG1fWjlOOVF0R3hRenNWSkltS3Fvc3VyWjNPTjQ3dzlreG1BODF6NnRZOXBZVVZFTnlwV0lGcTZvSzRzalZLV1BPM3lEYzBGUVoyem5PdFktbjNIMEVOQQ?oc=5": "2026-11-05",
+  "https://news.google.com/rss/articles/CBMiXkFVX3lxTFBUUTdtZjg5cndXZUdNYzdxang4WTBOd0dINUhmdkxySDRESXZNR0VKbEdBMEFKc2RETjEyUC1MaVV5WldUQ1pGSWdrQkY1ZVRoSEI3UFVYeHhhNnZTYmc?oc=5": "2026-11-05",
+  "https://ubuntu.com//blog/ubuntu-pro-available-on-dlami": "2026-11-05",
+  "https://news.google.com/rss/articles/CBMieEFVX3lxTE1LNmRUNjBISUdidV9oVi1tSDBhSmRQRS1URXRfQ1YwQnViQTVwNi1qdVMydlpMbkR3Rk04NW9wY0pJNEEzVnB5WXR5a0dnUElZNTh1OHFnby1XN0FQVFBoTEdNWnFlWXczTGc5YUxMVDhlZkI0Rm1SSA?oc=5": "2026-11-05",
+  "https://news.google.com/rss/articles/CBMiogFBVV95cUxPdVRNb3RvT2FYdjkzbGYwbXhPQ29WY2NHWUJPa2I1U1ZRVUVaN3BwdUoyc0ZGbFFsQTBDYnJ0UnpmVmt2bVdKYnVvUUJTeFRsU19XMW9FQlpBV1NOdXNhXzdhTDRHUUdWYXJPVGRVYWJPaEgwazBlX183cUhBcEJ3YU53OUF4VGZiQmtkV2ZYenRSOGI0V3BwNUN2Z1dyVFhxWkE?oc=5": "2026-11-05",
+  "https://news.google.com/rss/articles/CBMiggFBVV95cUxQaGZIVGMxLVBKb1NRaGNvbmxHTXFVa3phVkZLWWtzQ3RqNHFuRmEtbnJLaUlaX2YxcXA2dWE2WGk2MWQtUXJiQ09iR2FWeGJ3c2ZZYUJjR1hYVFRvb3FDNnV0ZUJDNUZQVGZDYjBicXpRbVRscmQ5M2pyZ0FERWYycmZn?oc=5": "2026-11-05",
+  "https://news.google.com/rss/articles/CBMif0FVX3lxTFBhamhlMXFfRkVyRExCQWNsa0dsMS1relJxdjNFQUlvUm9HdnNqS1hsWWZJVThhSlFfb3JNNmNSVzZFZVZ4NUhTckRLLU5pSUI5ajQ4Y240akxxRmlGLVIwWk1GS2VBSzY3SVBnbHRRX0RrOTFiNUlPYUNQRGF6MTjSAYQBQVVfeXFMTkEyV3ZYMHUxZGp0SW05cmptTlBrVi1MR0xBU0xBU08xaWpyd2dxVzdIXzUtNXFGQnFtU2dMR0l2WnZ0bC04RGRJVDJESUx4LVlrU0U5MkFvRFdFY3hQcjNvSG5kZUxvSWJZa0lPQmhndXVMRmxZUUdhMVhwV2lIYjRuU216?oc=5": "2026-11-05",
+  "https://alpinelinux.org/posts/2026-11-05-openssh-password-authentication-bypass/": "2026-11-05",
+  "https://alpinelinux.org/posts/alpine-3.21.10-3.22.8-3.23.8-3.24.4-released/": "2026-11-05",
+  "https://news.google.com/rss/articles/CBMilwFBVV95cUxOX3NzSlJBa1hZaDdXTGZUQUZPWGFod1I4UjM3LWhJNVk2cjJtUG5jY0lSVml0QWxOMnJDUXFzV1Q0Smd5cGxvSmpwUmlHVFBac1dwY0NTMHpybWlPUWxNUU9oTENfOUNRektDY3pha0d6QUdEcnhwRzZKdXdQLV9USzg5S09KRVVrd09Td3FmMzRMaERfZU1v?oc=5": "2026-11-05",
+  "https://tailscale.com/blog/100x-more-programmers": "2026-11-05",
+  "https://github.com/brave/brave-browser/releases/tag/v1.101.28": "2026-11-05",
+  "https://github.com/brave/brave-browser/releases/tag/v1.101.27": "2026-11-05"
  }
 }
