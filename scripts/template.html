@@ -109,6 +109,8 @@
   .cdesc { font-size: 13px; color: var(--muted); margin-top: 3px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .mine { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 13px; border: 1px dashed var(--border); border-radius: 10px; padding: 8px 12px; }
   .mine .iv { font-family: "JetBrains Mono", ui-monospace, monospace; font-weight: 500; }
+  .mine .eol { flex-basis: 100%; font-size: 12px; }
+  .mine a.eol:hover { text-decoration: underline; }
   .st-ok { color: var(--muted); font-weight: 600; }
   .st-up { color: var(--new); font-weight: 600; }
   .st-cve { color: var(--crit); font-weight: 600; }
@@ -155,14 +157,14 @@
 </div>
 
 <main class="wrap">
-  <p class="note" id="note" hidden>CVE publiées sur les 30 derniers jours dans la base NVD (NIST), rattachées au produit par leurs identifiants CPE. « À confirmer » = pas encore analysée par la NVD, produit déduit de la description. 5 plus récentes au maximum par technologie. « Exploitée » = présente au catalogue CISA KEV.</p>
+  <p class="note" id="note" hidden>CVE publiées sur les 30 derniers jours dans la base NVD (NIST), rattachées au produit par leurs identifiants CPE, ou à défaut par les données de l'éditeur publiées sur CVE.org. « À confirmer » = produit déduit de la description seulement. 5 plus récentes au maximum par technologie. « Exploitée » = présente au catalogue CISA KEV.</p>
   <div class="grid" id="grid"></div>
   <p class="none" id="none">Aucun résultat pour ce filtre.</p>
 </main>
 
 <footer class="wrap">
   Généré automatiquement par la tâche planifiée <b>veille</b> à partir de <a href="technologies.csv">technologies.csv</a>.
-  Sources : GitHub Releases, kernel.org, flux officiels, Google News, NVD (NIST).
+  Sources : GitHub Releases, kernel.org, flux officiels, Google News, NVD (NIST), CVE.org, endoflife.date.
 </footer>
 
 <script>
@@ -192,7 +194,7 @@ const DATA = /*__DATA__*/null;
     [st.releases_week, "versions cette semaine"],
     [st.news, "articles retenus"],
     [st.cves ?? 0, "CVE récentes" + (st.cves_critical ? ` · ${st.cves_critical} élevées/critiques` : "")],
-    ...(DATA.results.some((r) => r.installed) ? [[st.to_update ?? 0, "à mettre à jour" + (st.cves_affecting ? ` · ${st.cves_affecting} CVE sur tes versions` : "")]] : []),
+    ...(DATA.results.some((r) => r.installed) ? [[st.to_update ?? 0, "à mettre à jour" + (st.eol_ended ? ` · ${st.eol_ended} hors support` : "") + (st.cves_affecting ? ` · ${st.cves_affecting} CVE sur tes versions` : "")]] : []),
   ].map(([n, l]) => `<div class="stat"><b>${n}</b><small>${l}</small></div>`).join("");
 
   const SEV_FR = { CRITICAL: "Critique", HIGH: "Élevée", MEDIUM: "Moyenne", LOW: "Faible" };
@@ -251,11 +253,18 @@ const DATA = /*__DATA__*/null;
            <span class="v" title="${esc(rel.version)}">${esc(rel.version)}</span><span class="d">${rel.date ? esc(ago(rel.date)) : ""}</span></a></div>`
       : "";
     const up = r.version_status === "update", cvm = r.cves_affecting || 0;
+    const e = r.eol || {};
+    const fmtMonth = (d) => new Date(d + "T00:00:00Z").toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
+    const eolHtml = e.cycle
+      ? `<a class="eol ${e.ended ? "st-cve" : "st-ok"}" href="${esc(e.url)}" target="_blank" rel="noopener">Branche ${esc(e.cycle)}${e.lts ? " LTS" : ""} · ${
+          e.ended ? `⚠ plus supportée${e.until ? " depuis " + esc(fmtMonth(e.until)) : ""}${e.current && e.current !== e.cycle ? " → passer à " + esc(e.current) : ""}` : e.until ? "supportée jusqu'à " + esc(fmtMonth(e.until)) : "supportée"}</a>`
+      : "";
     const mineHtml = r.installed
       ? `<div class="mine"><span>Ta version <span class="iv">${esc(r.installed)}</span></span>
            <span>${cvm ? `<span class="st-cve">⚠ ${cvm} CVE la concerne${cvm > 1 ? "nt" : ""}</span>${up || r.version_status ? " · " : ""}` : ""}${up
              ? `<span class="st-up">Mise à jour → ${esc(r.latest_version)}</span>`
-             : r.version_status === "ok" ? '<span class="st-ok">✓ À jour</span>' : ""}</span></div>`
+             : r.version_status === "ok" ? '<span class="st-ok">✓ À jour</span>' : ""}</span>
+           ${eolHtml}</div>`
       : "";
     const news = r.news.length
       ? `<ul class="news">${r.news.map((n) => `<li><a href="${esc(n.url)}" target="_blank" rel="noopener">

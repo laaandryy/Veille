@@ -42,11 +42,17 @@ d'afficher sur la carte « ✓ À jour » ou « Mise à jour → x.y.z » (compa
 pour le noyau, dans la même branche, ex. 6.1.x) et de signaler les CVE dont la plage vulnérable
 contient ta version. Exemple : `Ollama;;0.12.3`.
 
+Pour les produits suivis sur [endoflife.date](https://endoflife.date) (clé `eol` de `sources.json` :
+noyau Linux, Debian, Ubuntu, Alpine, Docker Engine, Proxmox VE, pfSense, VirtualBox), la carte indique
+aussi la branche de ta version et sa date de fin de support (⚠ si elle n'est plus supportée), et la
+mise à jour est comparée à la dernière version de cette branche.
+
 ## Failles (CVE)
 
 L'onglet **Failles CVE** liste, pour chaque technologie, les 5 CVE les plus récentes publiées sur
 30 jours dans la base [NVD](https://nvd.nist.gov) : recherche de l'expression `cve` de `sources.json`
 dans la description, puis vérification des identifiants CPE (motifs `cpe` de `sources.json`). Une CVE
-déjà analysée qui vise un autre produit est écartée ; une CVE pas encore analysée par la NVD est
-marquée « À confirmer ». Les CVE touchant ta version installée sont affichées en priorité. Sans clé, la NVD limite le débit (≈ 3 min de collecte). Facultatif : créer
+déjà analysée qui vise un autre produit est écartée. Pour les CVE pas encore analysées par la NVD,
+le script consulte [CVE.org](https://www.cve.org) (produits et versions déclarés par l'éditeur dès
+la publication, jusqu'à 150 CVE par technologie) ; à défaut, elles restent « À confirmer ». Les CVE touchant ta version installée sont affichées en priorité. Sans clé, la NVD limite le débit (≈ 3 min de collecte). Facultatif : créer
 un secret `NVD_API_KEY` (clé gratuite sur nvd.nist.gov) pour accélérer.

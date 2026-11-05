@@ -1,5 +1,5 @@
 {
- "_doc": "Sources par technologie. Clé = nom exact (insensible à la casse) de technologies.csv. Champs : category, github (owner/repo, releases), feeds (RSS/Atom officiels), query (recherche actualités), site (lien officiel). Toute techno absente ici est suivie via la recherche d'actualités sur son nom. cve : mot-clé (expression exacte) cherché dans les CVE de la NVD ; chaîne vide pour désactiver. match : termes dont au moins un doit figurer dans le titre d'un article (défaut : le nom). exclure : expressions régulières de titres à écarter pour cette technologie. cpe : motifs 'éditeur:produit' (jokers *) des identifiants CPE NVD ; une CVE déjà analysée qui ne vise aucun de ces produits est écartée, et la version installée (3e colonne du CSV) est comparée aux plages vulnérables.",
+ "_doc": "Sources par technologie. Clé = nom exact (insensible à la casse) de technologies.csv. Champs : category, github (owner/repo, releases), feeds (RSS/Atom officiels), query (recherche actualités), site (lien officiel). Toute techno absente ici est suivie via la recherche d'actualités sur son nom. cve : mot-clé (expression exacte) cherché dans les CVE de la NVD ; chaîne vide pour désactiver. match : termes dont au moins un doit figurer dans le titre d'un article (défaut : le nom). exclure : expressions régulières de titres à écarter pour cette technologie. cpe : motifs 'éditeur:produit' (jokers *) des identifiants CPE NVD ; une CVE déjà analysée qui ne vise aucun de ces produits est écartée, et la version installée (3e colonne du CSV) est comparée aux plages vulnérables. eol : identifiant du produit sur endoflife.date (branches, dernière version, fin de support).",
  "_filtres": {
   "_doc": "Filtres globaux appliqués aux actualités Google News. titres_exclus : expressions régulières (insensibles à la casse) écartant un article par son titre. sources_exclues : médias écartés. mots_exclus_recherche : termes exclus directement dans la requête Google News.",
   "mots_exclus_recherche": [
@@ -162,7 +162,8 @@
    "docker:*",
    "mobyproject:*",
    "*:moby"
-  ]
+  ],
+  "eol": "docker-engine"
  },
  "Kernel Linux": {
   "category": "Systèmes",
@@ -180,8 +181,10 @@
    "torvalds"
   ],
   "cpe": [
-   "linux:linux_kernel"
-  ]
+   "linux:linux_kernel",
+   "linux:linux"
+  ],
+  "eol": "linux"
  },
  "Debian": {
   "category": "Systèmes",
@@ -196,7 +199,8 @@
   ],
   "cpe": [
    "debian:*"
-  ]
+  ],
+  "eol": "debian"
  },
  "Ubuntu": {
   "category": "Systèmes",
@@ -211,7 +215,8 @@
   ],
   "cpe": [
    "canonical:*"
-  ]
+  ],
+  "eol": "ubuntu"
  },
  "Alpine Linux": {
   "category": "Systèmes",
@@ -233,7 +238,8 @@
   "cpe": [
    "alpinelinux:*",
    "*:alpine_linux"
-  ]
+  ],
+  "eol": "alpine-linux"
  },
  "Arch Linux": {
   "category": "Systèmes",
@@ -309,7 +315,8 @@
   ],
   "cpe": [
    "proxmox:*"
-  ]
+  ],
+  "eol": "proxmox-ve"
  },
  "HyperV": {
   "category": "Virtualisation",
@@ -337,7 +344,8 @@
    "netgate:*",
    "pfsense:*",
    "*:pfsense*"
-  ]
+  ],
+  "eol": "pfsense"
  },
  "Wireguard": {
   "category": "Réseau & sécurité",
@@ -422,7 +430,8 @@
   "cpe": [
    "oracle:vm_virtualbox",
    "oracle:virtualbox"
-  ]
+  ],
+  "eol": "virtualbox"
  },
  "Brave": {
   "category": "Navigateurs & vie privée",

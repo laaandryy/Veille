@@ -273,6 +273,58 @@ def google_news(query: str, lang: str, negative: str = "") -> list[dict]:
         return []
 
 
+def eol_cycles(product: str) -> list[dict]:
+    """Branches d'un produit sur endoflife.date, normalisées.
+
+    Chaque branche : {cycle, release, eol (date ISO, True/False), lts, latest, latest_date, link}.
+    Gère l'API v1 et, en repli, l'ancienne API /api/<produit>.json.
+    """
+    def as_eol(v):
+        return v if isinstance(v, (bool, str)) or v is None else None
+    try:
+        data = json.loads(fetch(f"https://endoflife.date/api/v1/products/{product}"))
+        out = []
+        for r in (data.get("result") or {}).get("releases", []):
+            latest = r.get("latest") or {}
+            eol = r.get("eolFrom") or r.get("isEol")
+            out.append({"cycle": str(r.get("name")), "release": r.get("releaseDate"), "eol": as_eol(eol),
+                        "lts": bool(r.get("isLts")), "latest": latest.get("name"),
+                        "latest_date": latest.get("date"), "link": latest.get("link")})
+        if out:
+            return out
+    except Exception as e:  # noqa: BLE001
+        log(f"  ! endoflife v1 {product}: {e}")
+    try:
+        data = json.loads(fetch(f"https://endoflife.date/api/{product}.json"))
+        return [{"cycle": str(r.get("cycle")), "release": r.get("releaseDate"), "eol": as_eol(r.get("eol")),
+                 "lts": bool(r.get("lts")), "latest": r.get("latest"),
+                 "latest_date": r.get("latestReleaseDate"), "link": r.get("link")} for r in data]
+    except Exception as e:  # noqa: BLE001
+        log(f"  ! endoflife {product}: {e}")
+        return []
+
+
+def eol_status(cycle: dict) -> tuple[bool, str | None]:
+    """(branche en fin de support ?, date de fin de support ISO ou None)."""
+    eol = cycle.get("eol")
+    if isinstance(eol, str):
+        d = parse_date(eol + "T00:00:00Z") if len(eol) == 10 else parse_date(eol)
+        return (bool(d and d <= NOW), eol[:10])
+    return (bool(eol), None)
+
+
+def eol_match(cycles: list[dict], installed: tuple | None) -> dict | None:
+    """Branche correspondant à la version installée (préfixe le plus long : 6.1 pour 6.1.115)."""
+    if not installed:
+        return None
+    best = None
+    for c in cycles:
+        cv = parse_version(c["cycle"])
+        if cv and installed[: len(cv)] == cv and (best is None or len(cv) > len(parse_version(best["cycle"]))):
+            best = c
+    return best
+
+
 def parse_version(s: str | None) -> tuple[int, ...] | None:
     """'v1.2.3', 'Release 1.2.3 (…)', '2.51.0.windows.1' -> (1, 2, 3)."""
     m = re.search(r"\d+(?:\.\d+)*", s or "")
@@ -392,6 +444,85 @@ def nvd_cves(keyword: str, patterns: list[str] | None = None, installed: str = "
     return out
 
 
+CVEORG_MAX_PER_TECH = 150  # CVE non analysées par la NVD vérifiées sur CVE.org, par techno
+
+
+def _slug(s: str) -> str:
+    return re.sub(r"[^a-z0-9*]+", "_", (s or "").lower()).strip("_")
+
+
+def _le_wild(v: tuple, bound: str) -> bool:
+    """v <= bound, où bound peut finir par '*' (ex. '6.1.*' = toute la branche 6.1)."""
+    if bound.strip() == "*":
+        return True
+    if bound.endswith("*"):
+        p = parse_version(bound)
+        return bool(p) and v[: len(p)] <= p
+    b = parse_version(bound)
+    return bool(b) and vcmp(v, b) <= 0
+
+
+def cna_affects(entry: dict, installed: tuple) -> bool | None:
+    """Statut d'une version d'après un bloc 'affected' du format CVE 5 (CVE.org)."""
+    hits = []
+    for ver in entry.get("versions", []):
+        if ver.get("versionType") == "git":
+            continue
+        start = parse_version(ver.get("version")) if ver.get("version") not in (None, "*", "n/a") else (0,)
+        if start is None:
+            continue
+        lt, le = ver.get("lessThan"), ver.get("lessThanOrEqual")
+        if lt or le:
+            inside = vcmp(installed, start) >= 0
+            if le:
+                inside = inside and _le_wild(installed, le)
+            if lt and lt.strip() != "*":
+                if lt.endswith("*"):
+                    inside = inside and _le_wild(installed, lt)
+                else:
+                    b = parse_version(lt)
+                    inside = inside and bool(b) and vcmp(installed, b) < 0
+        else:
+            inside = vcmp(installed, start) == 0
+        if inside:
+            hits.append(ver.get("status"))
+    if "unaffected" in hits:
+        return False
+    if "affected" in hits:
+        return True
+    default = entry.get("defaultStatus")
+    return True if default == "affected" else False if default == "unaffected" else None
+
+
+def cveorg_check(cve_id: str, patterns: list[str], name: str, installed: tuple | None):
+    """Interroge CVE.org (données de l'organisme qui publie la CVE, disponibles dès sa publication).
+
+    Renvoie (statut, version installée concernée ?) ou None si l'API ne répond pas.
+    """
+    try:
+        rec = json.loads(fetch(f"https://cveawg.mitre.org/api/cve/{cve_id}"))
+    except Exception as e:  # noqa: BLE001
+        log(f"  ! cve.org {cve_id}: {e}")
+        return None
+    cont = rec.get("containers", {})
+    entries = list(cont.get("cna", {}).get("affected", []))
+    for adp in cont.get("adp", []):
+        entries += adp.get("affected", [])
+    entries = [e for e in entries if e.get("product") or e.get("vendor")]
+    if not entries:
+        return ("pending", None)
+    key = _slug(name)
+    mine = [e for e in entries
+            if any(fnmatch(f"{_slug(e.get('vendor'))}:{_slug(e.get('product'))}", p) for p in patterns)
+            or (key and key in _slug(e.get("product")))]
+    if not mine:
+        return ("other", None)
+    if not installed:
+        return ("cna", None)
+    verdicts = [cna_affects(e, installed) for e in mine]
+    return ("cna", True if True in verdicts else False if False in verdicts else None)
+
+
 def collect_cves(results: list[dict], sources: dict, previous: dict) -> None:
     """Interroge la NVD séquentiellement (limite de débit) et remplit r['cves']."""
     prev = {r["name"]: r.get("cves", []) for r in previous.get("results", [])}
@@ -405,6 +536,16 @@ def collect_cves(results: list[dict], sources: dict, previous: dict) -> None:
         if i:
             time.sleep(pause)
         found = nvd_cves(keyword, cfg.get("cpe"), r.get("installed", ""))
+        if found and cfg.get("cpe"):
+            # CVE pas encore analysées par la NVD : on complète avec CVE.org.
+            pending = [c for c in found if c["status"] == "pending"][:CVEORG_MAX_PER_TECH]
+            iv = parse_version(r.get("installed", ""))
+            with ThreadPoolExecutor(max_workers=8) as pool:
+                checks = list(pool.map(lambda c: cveorg_check(c["id"], cfg["cpe"], r["name"], iv), pending))
+            for c, res in zip(pending, checks):
+                if res:
+                    c["status"], c["affects"] = res
+            found = [c for c in found if c["status"] != "other"]
         if found is None:
             r["cves"] = prev.get(r["name"], [])
             r["cve_total"] = len(r["cves"])
@@ -418,8 +559,10 @@ def collect_cves(results: list[dict], sources: dict, previous: dict) -> None:
             r["cve_total"] = len(found)
             r["cves_affecting"] = len(mine)
             r["cves_pending"] = sum(1 for c in found if c["status"] == "pending")
+            r["cves_cna"] = sum(1 for c in found if c["status"] == "cna")
         log(f"- CVE {r['name']} ({keyword}) : {r['cve_total']} "
-            f"(à confirmer {r.get('cves_pending', 0)}, version installée {r.get('cves_affecting', 0)})")
+            f"(CVE.org {r.get('cves_cna', 0)}, à confirmer {r.get('cves_pending', 0)}, "
+            f"version installée {r.get('cves_affecting', 0)})")
 
 
 # --------------------------------------------------------------------------- pipeline
@@ -474,7 +617,31 @@ def collect(tech: dict, cfg: dict) -> dict:
     installed = tech.get("installed", "")
     latest, status = None, None
     iv = parse_version(installed)
-    if iv and releases:
+
+    # endoflife.date : branches, dernière version de chaque branche et fin de support.
+    eol = None
+    if cfg.get("eol"):
+        cycles = eol_cycles(cfg["eol"])
+        if cycles:
+            current = cycles[0]
+            if not releases and current.get("latest"):  # pas de releases GitHub : on prend endoflife.date
+                releases = [{"version": f"{current['latest']}", "tag": current["latest"],
+                             "date": iso(parse_date((current.get("latest_date") or "") + "T00:00:00Z"))
+                             if current.get("latest_date") else None,
+                             "url": current.get("link") or f"https://endoflife.date/{cfg['eol']}"}]
+            mine = eol_match(cycles, iv)
+            eol = {"product": cfg["eol"], "url": f"https://endoflife.date/{cfg['eol']}",
+                   "current": current["cycle"]}
+            if mine:
+                ended, until = eol_status(mine)
+                eol.update(cycle=mine["cycle"], ended=ended, until=until, lts=mine.get("lts"),
+                           cycle_latest=mine.get("latest"))
+                if mine.get("latest") and parse_version(mine["latest"]):
+                    # mise à jour comparée dans la branche installée (ex. 6.1.x, Debian 12.x)
+                    latest = mine["latest"]
+                    status = "update" if vcmp(iv, parse_version(latest)) < 0 else "ok"
+
+    if iv and releases and status is None:
         cands = [(parse_version(x["tag"] or x["version"]), x) for x in releases]
         cands = [(v, x) for v, x in cands if v]
         if cfg.get("kernel"):  # noyau : comparer dans la même branche (ex. 6.1.x LTS)
@@ -490,6 +657,7 @@ def collect(tech: dict, cfg: dict) -> dict:
         "installed": installed,
         "latest_version": latest,
         "version_status": status,
+        "eol": eol,
         "category": cfg.get("category", "Autres"),
         "repo": repo,
         "repo_meta": repo_meta,
@@ -556,6 +724,7 @@ def main() -> int:
             "technologies": len(results),
             "cves": sum(len(r["cves"]) for r in results),
             "to_update": sum(1 for r in results if r.get("version_status") == "update"),
+            "eol_ended": sum(1 for r in results if (r.get("eol") or {}).get("ended")),
             "cves_affecting": sum(r.get("cves_affecting", 0) for r in results),
             "cves_critical": sum(1 for r in results for c in r["cves"] if c["severity"] in ("CRITICAL", "HIGH")),
             "news": sum(len(r["news"]) for r in results),
